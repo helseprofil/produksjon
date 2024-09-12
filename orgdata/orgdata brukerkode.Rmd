@@ -1,0 +1,44 @@
+---
+title: "orgdata brukerkode"
+output: html_document
+date: "2024-09-12"
+---
+
+# Last inn orgdata-pakken
+```{r setup, include=FALSE}
+use_orgdata()
+```
+
+# Lag en orgdata-fil
+
+- Denne koden bruker du for å lage en orgfil fra rådata basert på oppsett i ACCESS. 
+- Uten videre spesifikasjon brukes alle filene som er definert
+- For å lagre orgfilen må save = TRUE
+
+```{r}
+dt <- make_file("FILGRUPPENAVN", save = TRUE)
+```
+
+# Lag flere filgrupper på en gang
+
+- Denne funksjonen kan bearbeide og lagre flere filgrupper på en gang
+
+```{r}
+make_filegroups("FILGRUPPENAVN1", "FILGRUPPENAVN2", etc...)
+```
+
+
+# Lage en fil med utvalgte rådata
+
+- Hvilke filer som skal være med kan defineres med argumentene `koblid` og `select`
+- Nyttig for å teste, uten å måtte kjøre hele prosessen på alle filene
+
+```{r}
+dt <- make_file("FILGRUPPENAVN", koblid = 48)
+dt <- make_file("FILGRUPPENAVN", koblid = c(48, 72))
+
+dt <- make_file("FILGRUPPENAVN", select = 1) #select the first valid file
+dt <- make_file("FILGRUPPENAVN", select = "last") #select the most recent file
+```
+
+
