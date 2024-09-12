@@ -15,7 +15,7 @@ use_qualcontrol <- function(){
 }
 
 is_updates <- function(){
-  currentversion <- "2024.09.12"
+  currentversion <- "2024.09.12" # Update this whenever updating user files
   localversion <- character()
   if(file.exists("setup/internal_functions.R")){
     localversion <- sub(".*\"(.*)\".*", "\\1", grep("currentversion <-", readLines("setup/internal_functions.R"), value = T)[1])
@@ -25,9 +25,9 @@ is_updates <- function(){
 
 update_userfiles <- function(){
 
-  choice <- menu(choices = c("Yes", "No"),
-                 title = paste0("\nOppdaterte brukerfiler er tilgjengelige!!",
-                                "\n\nOppdater (anbefalt)?"))
+  choice <- utils::menu(choices = c("Yes", "No"),
+                        title = paste0("\nOppdaterte brukerfiler er tilgjengelige!!",
+                                       "\n\nOppdater (anbefalt)?"))
 
   if(choice == 1){
     message("\nHenter oppdateringer...")
