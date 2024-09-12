@@ -31,8 +31,8 @@ update_userfiles <- function(){
 
   if(choice == 1){
     message("\nHenter oppdateringer...")
-    invisible(system("git fetch origin master"))
-    invisible(system("git reset --hard origin/master"))
+    invisible(system("git fetch origin main"))
+    invisible(system("git reset --hard origin/main"))
     invisible(system("git pull"))
   } else {
     message("\nSkipper oppdateringer, brukerfilene kan være utdaterte.")
