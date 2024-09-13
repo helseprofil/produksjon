@@ -6,7 +6,7 @@ date: "2024-09-12"
 
 # Last inn orgdata-pakken
 ```{r setup, include=FALSE}
-use_orgdata()
+library(orgdata)
 ```
 
 # Lag en orgdata-fil

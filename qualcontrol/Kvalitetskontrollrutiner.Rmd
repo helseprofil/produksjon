@@ -1,0 +1,143 @@
+---
+title: "Kvalitetskontrollrutine"
+output: html_document
+date: "2024-09-12"
+---
+
+De numererte overskriftene korresponderer med kolonner i KUBESTATUS-tabellen i ACCESS. 
+
+# Last inn `qualcontrol`
+```{r setup, include=FALSE}
+library(qualcontrol)
+```
+
+# Les inn fil(er), lag flaggede kuber og comparecube, lagre relevante fildumper
+
+- Erstatt parametrene med det som gjelder for filene du skal kontrollere. Se kommentarer bak de ulike argumentene. 
+    - Ny og gammel fil får navnene `newcube` og `oldcube`
+    - Kuber flagget for uteliggere og nye/utgåtte rader får navnet `newcube_flag` og `oldcube_flag`
+    - `comparecube` inneholder endringskolonner for alle verdikolonner. Alle rader i ny fil er med. 
+    
+- Fildumper lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
+
+```{r}
+readfiles(cube.new = "FILNAVN", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
+          modus.new = "KH", # KH eller NH
+          recode.new = FALSE, # Rekode til gjeldende GEO?
+          cube.old = "FILNAVN", # Kan også være NULL
+          modus.old = "KH", #KH eller NH
+          recode.old = TRUE) # Rekode til gjeldende GEO? 
+
+make_comparecube(outliers = TRUE,
+                 dumps = getOption("qualcontrol.dumps"), # default er comparecube og newcube_flag. Kan være NULL for ingen fildumper
+                 overwrite = FALSE) # skal eksisternde fildumper overskrives?
+```
+
+# 1. Sjekk kolonner og dimensjoner
+
+## Hvilke kolonner finnes? 
+- Hvilke kolonner finnes i ny fil (som skal være med ut), er disse korrekte?
+- Sjekk om det er noen nye eller utgåtte kolonner sammenlignet med forrige fil. 
+- Sjekker også hvilke uprikkede kolonner som er med (til bruk i kvalitetskontroll, disse blir ikke med ut)
+```{r}
+compare_colnames()
+```
+## Nivåer i dimensjonene
+- Sjekk om det er noen nye eller utgåtte nivåer i de ulike dimensjonene sammenlignet med forrige fil
+```{r}
+compare_dimensions()
+```
+
+# 2. Sjekk prikking
+
+## Er det tall under prikkegrensen?
+```{r}
+check_censoring(newcube)
+```
+## Sammenligne antall prikker
+- Sammenligner antallet rader med ulike verdier av SPVFLAGG. 
+- For å sammenligne fordelt på andre dimensjoner kan disse legges til i argumentet `by`, f.eks ved `by = "AAR"` eller `by = c("AAR", "KJONN")`
+- Kubene filtreres slik at bare felles rader sammenlignes. 
+    - Filtrering kan slås av ved å sette `filter.cubes = FALSE`
+```{r}
+compare_censoring(by = NULL, # Dimensjoner å sammenligne på tvers av, f.eks. by = c("ALDER", "KJONN")
+                  filter.cubes = TRUE) # Slås av ved å sette til FALSE
+```
+
+## Sammenligne antall prikker i tidsserier
+- Oppsummerer hvor mange tidsserier som har ulikt antall prikker
+fra 0 (uprikket) til maks (serieprikket), både absolutt antall og i andel av totalt antall tidsserier. 
+- Ny kube har vanligvis en mindre årgang, så tallene må sammenlignes litt på tvers av rader. 
+```{r}
+compare_censoring_timeseries()
+```
+
+
+# 3. Sjekk aggregering mellom geonivåer og ukjent bydel
+
+- Bruker den første tilgjengelige av sumTELLER_uprikk, sumTELLER, TELLER_uprikk eller TELLER for sammenligning. 
+    - For å sjekke hvilken som brukes kan du bruke  `select_teller_pri(names(newcube))`
+
+## Summerer Fylke til Land?
+```{r}
+qualcontrol::compare_geolevels(newcube, "FL")
+```
+
+## Summerer Kommune til Fylke?
+```{r}
+compare_geolevels("KF")
+```
+
+## Er Oslo kommune lik Oslo Fylke?
+```{r}
+compare_geolevels("OO")
+```
+
+## Summerer bydel til kommune?
+```{r}
+compare_geolevels(newcube, "BK")
+```
+
+## Hvor stor er andelen ukjent bydel
+- Beregner andelen ukjent som ratioen av totalt antall i bydel og kommune, for alle komplette strata (ikke noen prikkede eller manglende tall). 
+- Dette beregnes for:
+    - Første tilgjengelige av sumTELLER_uprikk, sumTELLER, TELLER_uprikk eller TELLER
+    - Første tilgjengelige av sumNEVNER_uprikk, sumNEVNER, NEVNER_uprikk eller NEVNER
+- For å redusere størrelsen på tabellen kan den beskjæres til å bare vise de strataene med størst andel ukjent. Dette styres ved
+    - crop: TRUE/FALSE
+    - maxrows: Viser de x antall største andel ukjent for hver kommune/måltall, opp til maks antall rader. 
+    
+```{r}
+unknown_bydel(crop = TRUE, # Skal bare de strata med størst andel ukjent bydel vises? (tabellen kan bli veldig stor hvis ikke)
+              maxrows = 4000) # Maksimalt antall rader i tabellen (fordeles jevnt på KOMMUNE og TARGET)
+```
+
+
+# 4. Sjekk tidsserier på landsnivå
+- Plotter alle måltall over tid på landsnivå, fordelt på de ulike dimensjonene.
+- Brukes for å avdekke eventuell feilklassifisering eller andre underlige mønstre i tidsseriene som indikerer at noe er feil.
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_country, med mindre `save = FALSE`
+
+```{r}
+qualcontrol::plot_timeseries_country(save = TRUE)
+```
+# 5. Batch v Batch
+- Oppsummering av sammenligning mot gammel kube.
+- Viser antallet identiske/forskjellige rader, antallet nye/utgåtte prikker
+- For ulike rader vises min/mean/max absolutt og relativ forskjell, som sier noe om omfanget av forskjeller fra i fjor.
+- Videre kontroll:
+    - Bruk objektet `comparecube` i R, eller 
+    - fildumpen comparecube i PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER for videre kontroll
+
+```{r}
+comparecube_summary()
+```
+
+## Plott av forskjeller over tid
+- Er det noen mønstre i forskjellen mellom ny og gammel kube? Blir forskjellene større jo lenger bak i tidsserien vi kommer?
+- Kan fange opp om det er noe spesielt med data på enkeltår. 
+- For indikatorer med sterke trender vil vi forvente større forskjeller lenger bak når dataene standardiseres mot siste år. 
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Diff_timetrends, med mindre `save = FALSE`
+```{r}
+plot_diff_timetrends(save = TRUE)
+```
