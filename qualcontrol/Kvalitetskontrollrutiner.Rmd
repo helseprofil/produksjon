@@ -4,11 +4,18 @@ output: html_document
 date: "2024-09-12"
 ---
 
-De numererte overskriftene korresponderer med kolonner i KUBESTATUS-tabellen i ACCESS. 
+De numererte overskriftene korresponderer med kolonner i KUBESTATUS-tabellen i ACCESS.
 
 # Last inn `qualcontrol`
 ```{r setup, include=FALSE}
 library(qualcontrol)
+```
+
+# Endre parametre ved behov
+- Dette påvirker hvilken årgangsmappe output blir lagret i: 
+    - PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
+```{r}
+options(qualcontrol.year = 2024) # Endre år ved behov
 ```
 
 # Les inn fil(er), lag flaggede kuber og comparecube, lagre relevante fildumper
@@ -129,6 +136,7 @@ qualcontrol::plot_timeseries_country(save = TRUE)
     - Bruk objektet `comparecube` i R, eller 
     - fildumpen comparecube i PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER for videre kontroll
 
+## Overordnet oppsummering
 ```{r}
 comparecube_summary()
 ```
@@ -141,3 +149,40 @@ comparecube_summary()
 ```{r}
 plot_diff_timetrends(save = TRUE)
 ```
+
+# 6. Diagnostiske plott
+## Boksplott
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot, med mindre `save = FALSE`
+
+```{r}
+# KOMMER
+```
+
+## Boksplott år-til-år
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot_change, med mindre `save = FALSE`
+
+```{r}
+# KOMMER
+```
+
+## Tidsserier
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries, med mindre `save = FALSE`
+
+```{r}
+# KOMMER
+```
+
+## Tidsserier år-til-år
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_change, med mindre `save = FALSE`
+
+```{r}
+# KOMMER
+```
+
+## Tidsserier bydel
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_bydel, med mindre `save = FALSE`
+
+```{r}
+# KOMMER
+```
+

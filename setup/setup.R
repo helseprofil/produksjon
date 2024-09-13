@@ -5,4 +5,7 @@ if(is_updates()){
   update_userfiles()
 }
 
+rm(is_updates)
+rm(update_userfiles)
+
 source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/welcome.R")

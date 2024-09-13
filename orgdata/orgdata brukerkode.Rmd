@@ -37,7 +37,7 @@ make_filegroups("FILGRUPPENAVN1", "FILGRUPPENAVN2", etc...)
 dt <- make_file("FILGRUPPENAVN", koblid = 48)
 dt <- make_file("FILGRUPPENAVN", koblid = c(48, 72))
 
-dt <- make_file("FILGRUPPENAVN", select = 1) #select the first valid file
+dt <- make_file("FILGRUPPENAVN", select = 1, save = F) #select the first valid file
 dt <- make_file("FILGRUPPENAVN", select = "last") #select the most recent file
 ```
 

@@ -1,11 +1,11 @@
-use_khfunctions <- function(){
-  message("Loading KHfunctions\n---\n")
-  message("Currently not available")
-  # source("https://raw.githubusercontent.com/helseprofil/khfunctions/master/R/KHsetup.R")
-}
+# use_khfunctions <- function(){
+#   message("Loading KHfunctions\n---\n")
+#   message("Currently not available")
+#   # source("https://raw.githubusercontent.com/helseprofil/khfunctions/master/R/KHsetup.R")
+# }
 
 is_updates <- function(){
-  currentversion <- "2024.09.12" # Update this whenever updating user files
+  currentversion <- "2024.09.13" # Update this whenever updating user files
   localversion <- character()
   if(file.exists("setup/internal_functions.R")){
     localversion <- sub(".*\"(.*)\".*", "\\1", grep("currentversion <-", readLines("setup/internal_functions.R"), value = T)[1])
