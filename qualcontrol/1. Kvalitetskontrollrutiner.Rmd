@@ -151,7 +151,7 @@ unknown_bydel(crop = TRUE, # Skal bare de strata med størst andel ukjent bydel 
               maxrows = 4000) # Maksimalt antall rader i tabellen (fordeles jevnt på KOMMUNE og TARGET)
 ```
 
-## Tidsserier 
+## Bydelstidsserier 
 
 - Se om utviklingen i bydelene er i tråd med utviklingen i kommunen de tilhører. 
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_bydel, med mindre `save = FALSE`
@@ -192,14 +192,15 @@ plot_diff_timetrends(save = TRUE)
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot, med mindre `save = FALSE`
 
 ```{r}
-# KOMMER
+plot_boxplot(save = TRUE)
 ```
 
 ## Boksplott år-til-år
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot_change, med mindre `save = FALSE`
 
 ```{r}
-# KOMMER
+plot_boxplot(change = TRUE, # Bestemmer at det er år-til-år
+             save = TRUE)
 ```
 
 ## Tidsserier
