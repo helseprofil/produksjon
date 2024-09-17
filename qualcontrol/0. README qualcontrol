@@ -1,0 +1,47 @@
+# QUALCONTROL
+
+Qualcontrol er en R-pakke som inneholder funksjoner for å gjennomføre kvalitetskontrollrutinene i arbeidet med folkehelse- og oppvekstprofiler og tilhørende statistikkbank.
+
+Hoveddelen av kvalitetskontrollen består av å kontrollere de enkelte ferdige datafilene (kuber) som produseres. Disse inneholder tidsserier fordelt på geografiske nivåer og andre dimensjoner som kjønn, alder, utdanningsnivå og innvandringskategori. Datafilene sjekkes både for eget innhold, og sammenlignes med tidligere publiserte tall.
+
+Kvalitetskontrollrutinene inneholder per nå kontroll av:
+
+## Kolonner og dimensjoner:
+
+- Er de riktige kolonnene med ut?
+- Har alle dimensjonene riktige nivåer?
+
+## Personvern:
+
+- Finnes det tall under grensene for personvernsskjuling?
+- Hvordan er antallet prikker sammenlignet med forrige publiserte fil?
+- Hvordan fordeler antallet prikker seg på de enkelte tidsseriene?
+
+# Aggregering mellom geografiske nivåer
+
+- Summerer fylkestallene opp til land?
+- Summerer kommunetall opp til fylke?
+- Er Oslo kommune og Oslo fylke like?
+- Summerer bydelene seg opp til kommuner (med bydeler)?
+- Hvor stor er andelen ukjent bydel, kan vi vise bydelstall eller er de for usikre?
+
+## Tidsserier på landsnivå
+
+- For hver av verdikolonnene plottes hele tidsserien fordelt på de ulike dimensjonene i filen. Dette kan avdekke om det har forekommet feilklassifisering (f.eks. to kategorier som bytter plass) pga feilkoding eller endrede definisjoner.
+
+## Sammenligning mot forrige fil
+
+- Sjekke at tallene vi publiserer i år er de samme som det vi publiserte sist. Noe forskjeller er forventet mtp endret år for standardisering, men store eller uforklarte forskjeller kan indikere feil i årets eller forrige grunnlagsdata, eller i databearbeidingen.
+- Hvor mange tall er forskjellige, og hvor forskjellige er de? Skyldes dette standardisering?
+- Er fordelingen av forskjellene lik over tid, eller er forskjellene f.eks. større lenger bak i tidsserien (kan være forventet)?
+
+## Diagnostiske plott
+
+# ----- #
+
+# Brukerveiledning
+
+- Bruk dokumentet Kvalitetskontrollrutiner.Rmd
+- Les inn R-pakken og datafilene (årets og fjorårets), og endre eventuelt produksjonsår
+- Kjør de ulike funksjonene nedover. Output printes fortløpende under koden, eller lagres i spesifikke mapper.
+- Dokumenter hvert steg fortløpende i ACCESS-tabellen KUBESTATUS.
