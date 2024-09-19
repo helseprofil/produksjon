@@ -192,14 +192,17 @@ plot_diff_timetrends(save = TRUE)
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot, med mindre `save = FALSE`
 
 ```{r}
-plot_boxplot(save = TRUE)
+plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
+             change = FALSE, # Vanlige boksplott, ikke år-til-år
+             save = TRUE)
 ```
 
 ## Boksplott år-til-år
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot_change, med mindre `save = FALSE`
 
 ```{r}
-plot_boxplot(change = TRUE, # Bestemmer at det er år-til-år
+plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
+             change = TRUE, # Bestemmer at det er år-til-år
              save = TRUE)
 ```
 
@@ -207,13 +210,17 @@ plot_boxplot(change = TRUE, # Bestemmer at det er år-til-år
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries, med mindre `save = FALSE`
 
 ```{r}
-# KOMMER
+plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plottes?
+                change = FALSE, # Vanlige tidsserier
+                save = TRUE)
 ```
 
 ## Tidsserier år-til-år
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_change, med mindre `save = FALSE`
 
 ```{r}
-# KOMMER
+plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plottes?
+                change = TRUE, # Tidsserier for år-til-år endringer
+                save = TRUE)
 ```
 
