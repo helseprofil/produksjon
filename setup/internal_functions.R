@@ -9,7 +9,7 @@ is_updates <- function(lastupdated){
   if(file.exists("setup/setup.R")){
     localversion <- sub(".*\"(.*)\".*", "\\1", grep("lastupdated <-", readLines("setup/setup.R"), value = T))
   }
-  currentversion != localversion
+  lastupdated != localversion
 }
 
 update_userfiles <- function(){
