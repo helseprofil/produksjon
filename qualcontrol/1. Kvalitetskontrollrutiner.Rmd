@@ -18,7 +18,7 @@ library(qualcontrol)
     - PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
     
 ```{r}
-update_qcyear(2024) # Endre år ved behov
+update_qcyear(2025) # Endre år ved behov
 ```
 
 # Les inn fil(er), lag flaggede kuber og comparecube, lagre relevante fildumper
@@ -31,10 +31,10 @@ update_qcyear(2024) # Endre år ved behov
 - Fildumper lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
 
 ```{r}
-readfiles(cube.new = "FILNAVN", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
+readfiles(cube.new = "TRANGBODDHET_2023-11-20-11-05", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
           modus.new = "KH", # KH eller NH
           recode.new = FALSE, # Rekode til gjeldende GEO?
-          cube.old = "FILNAVN", # Kan også være NULL
+          cube.old = "TRANGBODDHET_2023-01-03-14-38", # Kan også være NULL
           modus.old = "KH", #KH eller NH
           recode.old = TRUE) # Rekode til gjeldende GEO? 
 
@@ -43,7 +43,7 @@ make_comparecube(outliers = TRUE,
                  overwrite = FALSE) # skal eksisternde fildumper overskrives?
 ```
 
-# 1. Sjekk kolonner og dimensjoner
+# 1. Deskriptiv grovsjekk
 
 ## Hvilke kolonner finnes? 
 
@@ -63,7 +63,41 @@ compare_colnames()
 compare_dimensions()
 ```
 
-# 2. Sjekk prikking
+## Tidsserier på landsnivå
+
+- Plotter alle måltall over tid på landsnivå, fordelt på de ulike dimensjonene.
+- Brukes for å avdekke eventuell feilklassifisering eller andre underlige mønstre i tidsseriene som indikerer at noe er feil.
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_country, med mindre `save = FALSE`
+
+```{r}
+qualcontrol::plot_timeseries_country(save = TRUE)
+```
+
+# 2. Batch v Batch
+
+## Overordnet oppsummering
+- Oppsummering av sammenligning mot gammel kube.
+- Viser antallet identiske/forskjellige rader, antallet nye/utgåtte prikker
+- For ulike rader vises min/mean/max absolutt og relativ forskjell, som sier noe om omfanget av forskjeller fra i fjor.
+- Videre kontroll:
+    - Bruk objektet `comparecube` i R, eller 
+    - fildumpen comparecube i PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER for videre kontroll
+
+```{r}
+comparecube_summary()
+```
+
+## Plott av forskjeller over tid
+- Er det noen mønstre i forskjellen mellom ny og gammel kube? Blir forskjellene større jo lenger bak i tidsserien vi kommer?
+- Kan fange opp om det er noe spesielt med data på enkeltår. 
+- For indikatorer med sterke trender vil vi forvente større forskjeller lenger bak når dataene standardiseres mot siste år. 
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Diff_timetrends, med mindre `save = FALSE`
+
+```{r}
+plot_diff_timetrends(save = TRUE)
+```
+
+# 3. Prikking
 
 ## Er det tall under prikkegrensen?
 
@@ -80,6 +114,14 @@ check_censoring(newcube)
 - Kubene filtreres slik at bare felles rader sammenlignes. 
     - Filtrering kan slås av ved å sette `filter.cubes = FALSE`
     
+## Sjekke antall prikker i ny kube per årgang. 
+- Sjekke at det er omtrent like mange prikker på tvers av årganger.
+```{r}
+compare_censoring(cube.old = NULL,
+                  by = "AAR", 
+                  filter.cubes = FALSE)
+```
+
 ```{r}
 compare_censoring(by = NULL, # Dimensjoner å sammenligne på tvers av, f.eks. by = c("ALDER", "KJONN")
                   filter.cubes = TRUE) # Slås av ved å sette til FALSE
@@ -95,46 +137,35 @@ fra 0 (uprikket) til maks (serieprikket), både absolutt antall og i andel av to
 compare_censoring_timeseries()
 ```
 
-# 3. Tidsserier på landsnivå
-
-- Plotter alle måltall over tid på landsnivå, fordelt på de ulike dimensjonene.
-- Brukes for å avdekke eventuell feilklassifisering eller andre underlige mønstre i tidsseriene som indikerer at noe er feil.
-- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_country, med mindre `save = FALSE`
-
-```{r}
-qualcontrol::plot_timeseries_country(save = TRUE)
-```
-
-# 4. Sjekk aggregering mellom geonivåer og ukjent bydel
+# 4. Sjekk aggregering
 
 - Bruker den første tilgjengelige av sumTELLER_uprikk, sumTELLER, TELLER_uprikk eller TELLER for sammenligning. 
     - For å sjekke hvilken som brukes kan du bruke  `select_teller_pri(names(newcube))`
+- `comparison` må være en av "FL", "KF", "BK" eller "OO" for å sammenligne hhv Land (L), Fylke (F), Kommune (K), Bydel (B) og Oslo (O)
 
 ## Summerer Fylke til Land?
 
 ```{r}
-qualcontrol::compare_geolevels(newcube, "FL")
+compare_geolevels(comparison = "FL")
 ```
 
 ## Summerer Kommune til Fylke?
 
 ```{r}
-compare_geolevels("KF")
+compare_geolevels(comparison = "KF")
 ```
 
 ## Er Oslo kommune lik Oslo Fylke?
 
 ```{r}
-compare_geolevels("OO")
+compare_geolevels(comparison = "OO")
 ```
 
 ## Summerer bydel til kommune?
 
 ```{r}
-compare_geolevels(newcube, "BK")
+compare_geolevels(comparison = "BK")
 ```
-
-# 5. Bydelstall
 
 ## Hvor stor er andelen ukjent bydel
 
@@ -157,52 +188,16 @@ unknown_bydel(crop = TRUE, # Skal bare de strata med størst andel ukjent bydel 
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_bydel, med mindre `save = FALSE`
 
 ```{r}
-# KOMMER
+plot_timeseries_bydel(save = TRUE)
 ```
 
-
-# 6. Batch v Batch
-
-- Oppsummering av sammenligning mot gammel kube.
-- Viser antallet identiske/forskjellige rader, antallet nye/utgåtte prikker
-- For ulike rader vises min/mean/max absolutt og relativ forskjell, som sier noe om omfanget av forskjeller fra i fjor.
-- Videre kontroll:
-    - Bruk objektet `comparecube` i R, eller 
-    - fildumpen comparecube i PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER for videre kontroll
-
-## Overordnet oppsummering
-
-```{r}
-comparecube_summary()
-```
-
-## Plott av forskjeller over tid
-- Er det noen mønstre i forskjellen mellom ny og gammel kube? Blir forskjellene større jo lenger bak i tidsserien vi kommer?
-- Kan fange opp om det er noe spesielt med data på enkeltår. 
-- For indikatorer med sterke trender vil vi forvente større forskjeller lenger bak når dataene standardiseres mot siste år. 
-- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Diff_timetrends, med mindre `save = FALSE`
-
-```{r}
-plot_diff_timetrends(save = TRUE)
-```
-
-# 7. Sjekke ekstremverdier
+# 5. Sjekke ekstremverdier
 
 ## Boksplott
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot, med mindre `save = FALSE`
 
 ```{r}
 plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
-             change = FALSE, # Vanlige boksplott, ikke år-til-år
-             save = TRUE)
-```
-
-## Boksplott år-til-år
-- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot_change, med mindre `save = FALSE`
-
-```{r}
-plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
-             change = TRUE, # Bestemmer at det er år-til-år
              save = TRUE)
 ```
 
@@ -211,8 +206,19 @@ plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
 
 ```{r}
 plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plottes?
-                change = FALSE, # Vanlige tidsserier
                 save = TRUE)
+```
+
+
+
+# 6. Ekstremverdier år-til-år
+
+## Boksplott år-til-år
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot_change, med mindre `save = FALSE`
+
+```{r}
+plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
+             save = TRUE)
 ```
 
 ## Tidsserier år-til-år
@@ -220,7 +226,5 @@ plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plotte
 
 ```{r}
 plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plottes?
-                change = TRUE, # Tidsserier for år-til-år endringer
                 save = TRUE)
 ```
-

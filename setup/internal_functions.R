@@ -4,11 +4,10 @@
 #   # source("https://raw.githubusercontent.com/helseprofil/khfunctions/master/R/KHsetup.R")
 # }
 
-is_updates <- function(){
-  currentversion <- "2024.09.19" # Update this whenever updating user files
+is_updates <- function(lastupdated){
   localversion <- character()
-  if(file.exists("setup/internal_functions.R")){
-    localversion <- sub(".*\"(.*)\".*", "\\1", grep("currentversion <-", readLines("setup/internal_functions.R"), value = T)[1])
+  if(file.exists("setup/setup.R")){
+    localversion <- sub(".*\"(.*)\".*", "\\1", grep("lastupdated <-", readLines("setup/setup.R"), value = T))
   }
   currentversion != localversion
 }
