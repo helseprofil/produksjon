@@ -24,22 +24,27 @@ update_qcyear(2025) # Endre år ved behov
 # Les inn fil(er), lag flaggede kuber og comparecube, lagre relevante fildumper
 
 - Erstatt parametrene med det som gjelder for filene du skal kontrollere. Se kommentarer bak de ulike argumentene. 
+    - `readfiles()` leter først i QC-mappen, og deretter i DATERT. 
+- For å sjekke om filene er identiske, bruk `all.equal()`-funksjonen
+- Make_comparecube:
     - Ny og gammel fil får navnene `newcube` og `oldcube`
     - Kuber flagget for uteliggere og nye/utgåtte rader får navnet `newcube_flag` og `oldcube_flag`
     - `comparecube` inneholder endringskolonner for alle verdikolonner. Alle rader i ny fil er med. 
-    
 - Fildumper lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
 
 ```{r}
-readfiles(cube.new = "TRANGBODDHET_2023-11-20-11-05", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
+readfiles(cube.new = "FILNAVN", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
           modus.new = "KH", # KH eller NH
           recode.new = FALSE, # Rekode til gjeldende GEO?
-          cube.old = "TRANGBODDHET_2023-01-03-14-38", # Kan også være NULL
+          cube.old = "FILNAVN", # Kan også være NULL
           modus.old = "KH", #KH eller NH
           recode.old = TRUE) # Rekode til gjeldende GEO? 
 
+# Er filene identiske:
+# all.equal(newcube, oldcube, check.attributes = F)
+
 make_comparecube(outliers = TRUE,
-                 dumps = getOption("qualcontrol.dumps"), # default er comparecube og newcube_flag. Kan være NULL for ingen fildumper
+                 dumps = getOption("qualcontrol.dumps"), # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper
                  overwrite = FALSE) # skal eksisternde fildumper overskrives?
 ```
 
@@ -70,7 +75,7 @@ compare_dimensions()
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_country, med mindre `save = FALSE`
 
 ```{r}
-qualcontrol::plot_timeseries_country(save = TRUE)
+plot_timeseries_country(save = FALSE)
 ```
 
 # 2. Batch v Batch
@@ -85,6 +90,16 @@ qualcontrol::plot_timeseries_country(save = TRUE)
 
 ```{r}
 comparecube_summary()
+```
+
+## Antall og sum av differ totalt
+```{r}
+diffvals_summary()
+```
+
+## Antall og sum av differ per år
+```{r}
+diffvals_summary(byyear = TRUE)
 ```
 
 ## Plott av forskjeller over tid
@@ -104,7 +119,7 @@ plot_diff_timetrends(save = TRUE)
  - Henter informasjon fra KUBER-tabellen i ACCESS og sjekker prikking av både teller og nevner
  
 ```{r}
-check_censoring(newcube)
+check_censoring()
 ```
 
 ## Sammenligne antall prikker
@@ -117,9 +132,8 @@ check_censoring(newcube)
 ## Sjekke antall prikker i ny kube per årgang. 
 - Sjekke at det er omtrent like mange prikker på tvers av årganger.
 ```{r}
-compare_censoring(cube.old = NULL,
-                  by = "AAR", 
-                  filter.cubes = FALSE)
+compare_censoring(by = NULL, # Dimensjoner å sammenligne på tvers av, f.eks. by = c("ALDER", "KJONN")
+                  filter.cubes = TRUE) # TRUE = sammenligner bare felles rader, FALSE = sammenligner alle rader inkludert nye og utgåtte 
 ```
 
 ```{r}
@@ -198,7 +212,7 @@ plot_timeseries_bydel(save = TRUE)
 
 ```{r}
 plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
-             save = TRUE)
+             save = FALSE)
 ```
 
 ## Tidsserier
