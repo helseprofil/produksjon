@@ -1,8 +1,10 @@
-# use_khfunctions <- function(){
-#   message("Loading KHfunctions\n---\n")
-#   message("Currently not available")
-#   # source("https://raw.githubusercontent.com/helseprofil/khfunctions/master/R/KHsetup.R")
-# }
+#' @title use_khfunctions
+#' @description
+#' Loads all functions from khfunctions, production-test branch which is not
+#' depending on renv.
+use_khfunctions <- function(){
+  source("https://raw.githubusercontent.com/helseprofil/khfunctions/production-test/R/KHsetup.R")
+}
 
 is_updates <- function(lastupdated){
   localversion <- character()
