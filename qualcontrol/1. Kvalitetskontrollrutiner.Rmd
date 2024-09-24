@@ -15,7 +15,7 @@ library(qualcontrol)
 # Endre produksjonsår ved behov
 
 - Dette påvirker hvilken årgangsmappe output blir lagret i: 
-    - PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
+    - PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
     
 ```{r}
 update_qcyear(2025) # Endre år ved behov
@@ -30,7 +30,7 @@ update_qcyear(2025) # Endre år ved behov
     - Ny og gammel fil får navnene `newcube` og `oldcube`
     - Kuber flagget for uteliggere og nye/utgåtte rader får navnet `newcube_flag` og `oldcube_flag`
     - `comparecube` inneholder endringskolonner for alle verdikolonner. Alle rader i ny fil er med. 
-- Fildumper lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
+- Fildumper lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
 
 ```{r}
 readfiles(cube.new = "FILNAVN", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
@@ -72,7 +72,7 @@ compare_dimensions()
 
 - Plotter alle måltall over tid på landsnivå, fordelt på de ulike dimensjonene.
 - Brukes for å avdekke eventuell feilklassifisering eller andre underlige mønstre i tidsseriene som indikerer at noe er feil.
-- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_country, med mindre `save = FALSE`
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_country, med mindre `save = FALSE`
 
 ```{r}
 plot_timeseries_country(save = FALSE)
@@ -86,7 +86,7 @@ plot_timeseries_country(save = FALSE)
 - For ulike rader vises min/mean/max absolutt og relativ forskjell, som sier noe om omfanget av forskjeller fra i fjor.
 - Videre kontroll:
     - Bruk objektet `comparecube` i R, eller 
-    - fildumpen comparecube i PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER for videre kontroll
+    - fildumpen comparecube i PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER for videre kontroll
 
 ```{r}
 comparecube_summary()
@@ -106,7 +106,7 @@ diffvals_summary(byyear = TRUE)
 - Er det noen mønstre i forskjellen mellom ny og gammel kube? Blir forskjellene større jo lenger bak i tidsserien vi kommer?
 - Kan fange opp om det er noe spesielt med data på enkeltår. 
 - For indikatorer med sterke trender vil vi forvente større forskjeller lenger bak når dataene standardiseres mot siste år. 
-- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Diff_timetrends, med mindre `save = FALSE`
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Diff_timetrends, med mindre `save = FALSE`
 
 ```{r}
 plot_diff_timetrends(save = TRUE)
@@ -199,7 +199,7 @@ unknown_bydel(crop = TRUE, # Skal bare de strata med størst andel ukjent bydel 
 ## Bydelstidsserier 
 
 - Se om utviklingen i bydelene er i tråd med utviklingen i kommunen de tilhører. 
-- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_bydel, med mindre `save = FALSE`
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_bydel, med mindre `save = FALSE`
 
 ```{r}
 plot_timeseries_bydel(save = TRUE)
@@ -208,7 +208,7 @@ plot_timeseries_bydel(save = TRUE)
 # 5. Sjekke ekstremverdier
 
 ## Boksplott
-- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot, med mindre `save = FALSE`
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot, med mindre `save = FALSE`
 
 ```{r}
 plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
@@ -216,7 +216,7 @@ plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
 ```
 
 ## Tidsserier
-- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries, med mindre `save = FALSE`
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries, med mindre `save = FALSE`
 
 ```{r}
 plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plottes?
@@ -228,7 +228,7 @@ plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plotte
 # 6. Ekstremverdier år-til-år
 
 ## Boksplott år-til-år
-- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot_change, med mindre `save = FALSE`
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot_change, med mindre `save = FALSE`
 
 ```{r}
 plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
@@ -236,7 +236,7 @@ plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
 ```
 
 ## Tidsserier år-til-år
-- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QC/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_change, med mindre `save = FALSE`
+- Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_change, med mindre `save = FALSE`
 
 ```{r}
 plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plottes?
