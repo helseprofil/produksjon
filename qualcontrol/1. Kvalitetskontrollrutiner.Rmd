@@ -44,8 +44,8 @@ readfiles(cube.new = "FILNAVN", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mapp
 # all.equal(newcube, oldcube, check.attributes = F)
 
 make_comparecube(outliers = TRUE,
-                 dumps = getOption("qualcontrol.dumps"), # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper
-                 overwrite = FALSE) # skal eksisternde fildumper overskrives?
+                 dumps = getOption("qualcontrol.dumps"), # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
+                 overwrite = FALSE) # skal eksisternde fildumper overskrives? Det kan ta litt tid om filene er store, og er vanligvis unødvendig.
 ```
 
 # 1. Deskriptiv grovsjekk

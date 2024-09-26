@@ -1,0 +1,47 @@
+---
+title: "Friskvik og barometersjekk"
+author: "Vegard"
+date: "2024-09-26"
+output: html_document
+---
+# Last inn funksjonene
+
+```{r setup, include=FALSE}
+library(qualcontrol)
+```
+
+# Endre produksjonsår ved behov
+
+- Dette påvirker hvilken årgangsmappe output blir lagret i: 
+    - PRODUKSJON/VALIDERING/QualControl/FRISKVIKSJEKK/**_PRODUKSJONSÅR_**
+    
+```{r}
+update_qcyear(2025) # Endre år ved behov
+```
+
+## Friskviksjekk
+
+- Denne tar for seg alle filene i nyeste GODKJENT-mappe, og gjennomfører en rekke tester mot korresponderende kubefil (identifisert med samme datotag). 
+- Output lagres som en CSV-fil i mappen PRODUKSJON/VALIDERING/QualControl/FRISKVIKSJEKK/**_PRODUKSJONSÅR_**
+
+```{r cars}
+check_friskvik(profile = "FHP", # Må være FHP eller "OVP"
+               geolevel = "K", # "B", "K", eller "F"
+               profileyear = NULL) # Kan angis, ellers brukes default år som kan oppdateres med update_qcyear() over. 
+```
+
+
+## Barometersjekk
+
+- Sjekker om det er noen tilfeller der like verdier har fått farget prikk i barometeret
+- Leser filer fra PRODUKSJON/PRODUKTER/SSRS_filer
+    - default barometerfil er `inndataBaromater.dta`
+    - default indikatorfil er `Indikator_F.dta` (fylke) eller `Indikator_ny.dta` (kommune/bydel)
+```{r}
+check_barometer(type = "FHP", # "FHP" eller "OVP"
+                year = 2025, # Må angis som et firesifret tall
+                geo = "kommune",# Enten "fylke", "kommune" eller "bydel"
+                indikator = NULL, # Navn på indikatorfil, hvis NULL brukes default fil
+                barometer = NULL) # Navn på barometerfil, hvis NULL brukes default fil
+```
+
