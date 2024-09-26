@@ -75,7 +75,7 @@ compare_dimensions()
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_country, med mindre `save = FALSE`
 
 ```{r}
-plot_timeseries_country(save = FALSE)
+plot_timeseries_country(save = TRUE)
 ```
 
 # 2. Batch v Batch
@@ -129,15 +129,16 @@ check_censoring()
 - Kubene filtreres slik at bare felles rader sammenlignes. 
     - Filtrering kan slås av ved å sette `filter.cubes = FALSE`
     
-## Sjekke antall prikker i ny kube per årgang. 
-- Sjekke at det er omtrent like mange prikker på tvers av årganger.
 ```{r}
 compare_censoring(by = NULL, # Dimensjoner å sammenligne på tvers av, f.eks. by = c("ALDER", "KJONN")
                   filter.cubes = TRUE) # TRUE = sammenligner bare felles rader, FALSE = sammenligner alle rader inkludert nye og utgåtte 
 ```
 
+## Sjekke antall prikker i ny kube per årgang. 
+
+- Sjekke at det er omtrent like mange prikker på tvers av årganger.
 ```{r}
-compare_censoring(by = NULL, # Dimensjoner å sammenligne på tvers av, f.eks. by = c("ALDER", "KJONN")
+compare_censoring(by = "AAR", # Sammenligner per årgang, kan også kombineres med andre dimensjoner
                   filter.cubes = TRUE) # Slås av ved å sette til FALSE
 ```
 
@@ -212,7 +213,7 @@ plot_timeseries_bydel(save = TRUE)
 
 ```{r}
 plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
-             save = FALSE)
+             save = TRUE)
 ```
 
 ## Tidsserier
@@ -232,6 +233,7 @@ plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plotte
 
 ```{r}
 plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
+             change = TRUE, 
              save = TRUE)
 ```
 
@@ -240,5 +242,6 @@ plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
 
 ```{r}
 plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plottes?
+                change = TRUE,
                 save = TRUE)
 ```
