@@ -29,9 +29,11 @@ LagFilgruppe("FILGRUPPENAVN",
     - RESULTAT$ALLVIS (statistikkbankkube)
     - RESULTAT$QC (kvalitetskontrollkube)
 - Kubefilen lagres i mappen `DATERT`, kvalitetskontrollkuben i mappen `QC` og ACCESS-specs i mappen `specs`
+- Argumentet `alarm` kan settes til TRUE for å spille av en lyd når kuben er ferdig
 
 ```{r}
-LagKubeDatertCsv("KUBENAVN")
+LagKubeDatertCsv("KUBENAVN", 
+                 alarm = FALSE) # Sett til TRUE for å spille en lyd når kuben er ferdig
 ```
 
 

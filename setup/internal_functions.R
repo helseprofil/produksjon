@@ -3,7 +3,7 @@
 #' Loads all functions from khfunctions, production-test branch which is not
 #' depending on renv.
 use_khfunctions <- function(){
-  source("https://raw.githubusercontent.com/helseprofil/khfunctions/production-test/R/KHsetup.R")
+  source("https://raw.githubusercontent.com/helseprofil/khfunctions/master/R/KHsetup.R")
 }
 
 is_updates <- function(lastupdated){
