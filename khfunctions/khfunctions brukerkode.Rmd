@@ -1,7 +1,7 @@
 ---
 title: "khfunctions brukerfil"
 author: "Vegard"
-date: "2024-09-24"
+date: "2025-01-10"
 output: html_document
 ---
 
@@ -9,17 +9,30 @@ output: html_document
 
 - Dette laster inn alle funksjoner som er nødvendig for å bruke khfunctions. 
 - Disse funksjonene skal legge seg i Environment, og blir der til du restarter prosjektet. 
+
 ```{r setup, include=FALSE}
 use_khfunctions()
 ```
 
 # Filgruppe
 
-- Filgruppen lagres i 
+- Filgruppen lagres i MELLOMPRODUKTER/STABLAORG
+- Det er viktig å ha med versjonert = TRUE, da vil det lagres en filgruppe både i mappen NYESTE og DATERT
 
 ```{r cars}
 LagFilgruppe("FILGRUPPENAVN", 
              versjonert = TRUE)
+```
+
+# Lage flere filgrupper
+
+- try() sørger for at man går videre til neste filgruppe dersom en feiler
+- kopier linjene for å sette opp kjøring av flere filgrupper etter hverandre
+
+```{r}
+try(LagFilgruppe("FILGRUPPENAVN", versjonert = T))
+try(LagFilgruppe("FILGRUPPENAVN", versjonert = T))
+try(LagFilgruppe("FILGRUPPENAVN", versjonert = T))
 ```
 
 # Kube
@@ -35,6 +48,18 @@ LagFilgruppe("FILGRUPPENAVN",
 LagKubeDatertCsv("KUBENAVN", 
                  alarm = FALSE) # Sett til TRUE for å spille en lyd når kuben er ferdig
 ```
+
+# Lage flere kuber
+
+- try() sørger for at man går videre til neste kube dersom en feiler
+- kopier linjene for å sette opp kjøring av flere kuber etter hverandre
+
+```{r}
+try(LagKubeDatertCsv(("KUBENAVN")))
+try(LagKubeDatertCsv(("KUBENAVN")))
+try(LagKubeDatertCsv(("KUBENAVN")))
+```
+
 
 
 ## Fildumper

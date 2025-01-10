@@ -1,8 +1,9 @@
 Version: 1.0
+ProjectId: 5ffb0499-84a8-4a16-976c-5f9c4a061317
 
-RestoreWorkspace: Default
-SaveWorkspace: Default
-AlwaysSaveHistory: Default
+RestoreWorkspace: No
+SaveWorkspace: No
+AlwaysSaveHistory: No
 
 EnableCodeIndexing: Yes
 UseSpacesForTab: Yes
@@ -14,3 +15,5 @@ LaTeX: pdfLaTeX
 
 AutoAppendNewline: Yes
 StripTrailingWhitespace: Yes
+
+QuitChildProcessesOnExit: Yes

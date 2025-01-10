@@ -1,9 +1,8 @@
 #' @title use_khfunctions
 #' @description
-#' Loads all functions from khfunctions, production-test branch which is not
-#' depending on renv.
-use_khfunctions <- function(){
-  source("https://raw.githubusercontent.com/helseprofil/khfunctions/master/R/KHsetup.R")
+#' Loads all functions from khfunctions from the specified branch
+use_khfunctions <- function(branch = "arkiv-master-januar-2025"){
+  source(paste0("https://raw.githubusercontent.com/helseprofil/khfunctions/", branch, "/R/KHsetup.R"))
 }
 
 is_updates <- function(lastupdated){
