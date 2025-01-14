@@ -10,12 +10,12 @@ output: html_document
 - Dette laster inn alle funksjoner som er nødvendig for å bruke khfunctions. 
 - Disse funksjonene skal legge seg i Environment, og blir der til du restarter prosjektet. 
 - NB
-    - som standard leses funksjonene inn fra branch arkiv-master-januar-2025
-    - For å kjøre ny versjon av khfunctions, endre branch til "master" (den utkommenterte under)
+    - som standard leses funksjonene inn fra master branch
+    - For å kjøre den gamle versjonen av khfunctions per 10.januar 2025, endre branch til "arkiv-master-januar-2025" (den utkommenterte under)
 
 ```{r setup, include=FALSE}
-use_khfunctions(branch = "arkiv-master-januar-2025")
-# use_khfunctions(branch = "master")
+use_khfunctions(branch = "master")
+# use_khfunctions(branch = "arkiv-master-januar-2025")
 ```
 
 # Filgruppe
