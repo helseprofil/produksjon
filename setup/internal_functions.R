@@ -31,7 +31,7 @@ update_userfiles <- function(){
 #' @title update_packages
 #' @description Updates packages from cran and GitHub
 update_packages <- function(){
-  source("https://raw.githubusercontent.com/helseprofil/misc/main/ProfileSystems.R")
+  source("https://raw.githubusercontent.com/helseprofil/backend/main/misc/R/install.R")
   ProfileSystems(all = F, packages = T, norgeo = T, orgdata = T, qualcontrol = T)
   rm(ProfileSystems, DevelopSystems, check_R_version, envir = .GlobalEnv)
 }
