@@ -64,9 +64,7 @@ try(LagKubeDatertCsv(("KUBENAVN")))
 try(LagKubeDatertCsv(("KUBENAVN")))
 ```
 
-
-
-## Fildumper
+# Fildumper
 For å lagre fildumper bruker du følgende kode, i formatet list(DUMPPUNKT = "FORMAT")
 - Tilgjengelige formater er "CSV", "STATA" og "R". 
     - Disse kan kombineres med list(DUMPPUNKT = c("FORMAT1", "FORMAT2")) for å gi dumper på flere formater. 
@@ -100,5 +98,14 @@ dumps <- list(STATAPRIKKpre = "CSV", STATAPRIKKpost = "STATA", RSYNT_POSTPROSESS
 
 LagKubeDatertCsv("KUBENAVN", dumps = dumps)
 LagFilgruppe("FILGRUPPENAVN", versjonert = TRUE, dumps = dumps)
+```
+
+# Godkjentmappe
+
+Bruk kodene under for å lage nye godkjentmapper
+```{r}
+godkjent(profil = "FHP", # ELLER "OVP"
+         geoniv = "K", # Eller "B", "F"
+         year = 2025)
 ```
 
