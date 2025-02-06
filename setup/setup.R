@@ -8,7 +8,6 @@ if(is_updates(lastupdated)){
 
 rm(lastupdated)
 rm(is_updates)
-rm(update_userfiles)
 
 DIMENSIONS_ALL <- qualcontrol:::.validdims
 DIMENSIONS_STANDARD <- qualcontrol:::.standarddimensions
