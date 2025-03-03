@@ -5,4 +5,5 @@ message("Velkommen til Produksjonsløypen!\n",
         "- For å bruke khfunctions, bruk filen `khfunctions brukerkode.Rmd`\n",
         "- For å bruke kvalitetskontroll, bruk dokumentet `Kvalitetskontrollrutiner.Rmd`\n",
         "---\n",
-        "For å oppdatere alle pakker og prosjekter, bruk funksjonen `update_packages()`")
+        "For å oppdatere alle pakker og prosjekter, bruk funksjonen `update_packages()`",
+        "For å oppdatere brukerfilene, bruk funksjonen `update_userfiles()`")

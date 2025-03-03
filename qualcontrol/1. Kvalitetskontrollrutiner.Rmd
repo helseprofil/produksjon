@@ -33,18 +33,15 @@ update_qcyear(2025) # Endre år ved behov
 - Fildumper lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
 
 ```{r}
-readfiles(cube.new = "FILNAVN", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
+readfiles(cube.new = "MOBBING_0_2025-02-05-13-58", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
           modus.new = "KH", # KH eller NH
           recode.new = FALSE, # Rekode til gjeldende GEO?
-          cube.old = "FILNAVN", # Kan også være NULL
-          modus.old = "KH", #KH eller NH
-          recode.old = TRUE) # Rekode til gjeldende GEO? 
-
-# Er filene identiske:
-# all.equal(newcube, oldcube, check.attributes = F)
-
-make_comparecube(outliers = TRUE,
-                 dumps = getOption("qualcontrol.dumps")) # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
+          cube.old = "MOBBING_0_2024-02-23-11-28", # Kan også være NULL
+          modus.old = "KH", # KH eller NH
+          recode.old = TRUE, # Rekode til gjeldende GEO? 
+          comparecube = TRUE, # Lage comparecube? Denne trengs videre
+          outliers = TRUE, # Skal ekstremverdier beregnes?
+          dumps = getOption("qualcontrol.dumps")) # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
 ```
 
 # 1. Deskriptiv grovsjekk
@@ -88,17 +85,17 @@ plot_timeseries_country(save = TRUE)
     - fildumpen comparecube i PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER for videre kontroll
 
 ```{r}
-comparecube_summary()
+comparecube_summary(save = TRUE)
 ```
 
 ## Antall og sum av differ totalt
 ```{r}
-diffvals_summary()
+diffvals_summary(save = TRUE)
 ```
 
 ## Antall og sum av differ per år
 ```{r}
-diffvals_summary(byyear = TRUE)
+diffvals_summary(byyear = TRUE, save = TRUE)
 ```
 
 ## Plott av forskjeller over tid
@@ -118,7 +115,7 @@ plot_diff_timetrends(save = TRUE)
  - Henter informasjon fra KUBER-tabellen i ACCESS og sjekker prikking av både teller og nevner
  
 ```{r}
-check_censoring()
+check_censoring(dt = oldcube, save = TRUE)
 ```
 
 ## Sammenligne antall prikker
@@ -130,7 +127,8 @@ check_censoring()
     
 ```{r}
 compare_censoring(by = NULL, # Dimensjoner å sammenligne på tvers av, f.eks. by = c("ALDER", "KJONN")
-                  filter.cubes = TRUE) # TRUE = sammenligner bare felles rader, FALSE = sammenligner alle rader inkludert nye og utgåtte 
+                  filter.cubes = TRUE, # TRUE = sammenligner bare felles rader, FALSE = sammenligner alle rader inkludert nye og utgåtte 
+                  save = TRUE) 
 ```
 
 ## Sjekke antall prikker i ny kube per årgang. 
@@ -138,7 +136,8 @@ compare_censoring(by = NULL, # Dimensjoner å sammenligne på tvers av, f.eks. b
 - Sjekke at det er omtrent like mange prikker på tvers av årganger.
 ```{r}
 compare_censoring(by = "AAR", # Sammenligner per årgang, kan også kombineres med andre dimensjoner
-                  filter.cubes = TRUE) # Slås av ved å sette til FALSE
+                  filter.cubes = TRUE, # Slås av ved å sette til FALSE
+                  save = TRUE) 
 ```
 
 ## Sammenligne antall prikker i tidsserier
@@ -148,7 +147,7 @@ fra 0 (uprikket) til maks (serieprikket), både absolutt antall og i andel av to
 - Ny kube har vanligvis en mindre årgang, så tallene må sammenlignes litt på tvers av rader. 
 
 ```{r}
-compare_censoring_timeseries()
+compare_censoring_timeseries(, save = TRUE)
 ```
 
 # 4. Sjekk aggregering
@@ -160,25 +159,25 @@ compare_censoring_timeseries()
 ## Summerer Fylke til Land?
 
 ```{r}
-compare_geolevels(comparison = "FL")
+compare_geolevels(comparison = "FL", save = TRUE)
 ```
 
 ## Summerer Kommune til Fylke?
 
 ```{r}
-compare_geolevels(comparison = "KF")
+compare_geolevels(comparison = "KF", save = TRUE)
 ```
 
 ## Er Oslo kommune lik Oslo Fylke?
 
 ```{r}
-compare_geolevels(comparison = "OO")
+compare_geolevels(comparison = "OO", save = TRUE)
 ```
 
 ## Summerer bydel til kommune?
 
 ```{r}
-compare_geolevels(comparison = "BK")
+compare_geolevels(comparison = "BK", save = TRUE)
 ```
 
 ## Hvor stor er andelen ukjent bydel
@@ -193,7 +192,8 @@ compare_geolevels(comparison = "BK")
     
 ```{r}
 unknown_bydel(crop = TRUE, # Skal bare de strata med størst andel ukjent bydel vises? (tabellen kan bli veldig stor hvis ikke)
-              maxrows = 4000) # Maksimalt antall rader i tabellen (fordeles jevnt på KOMMUNE og TARGET)
+              maxrows = 4000, 
+              save = TRUE) # Maksimalt antall rader i tabellen (fordeles jevnt på KOMMUNE og TARGET)
 ```
 
 ## Bydelstidsserier 
@@ -246,8 +246,21 @@ plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plotte
 ```
 
 # EKSTRA: spesialsjekker
-## Nevnerkontroll av ungdata
+## Nevnerkontroll
+- Sammenligner nevner mot hhv forrige ikke-missing og høyeste nevner i tidsserien
+- Utviklet for ungdata-kuber, Kan brukes på alle kuber ved behov
 ```{r}
 check_nevner_change_ungdata()
+```
+
+## Dekningsgrad prikking
+- Sjekk hvor mange og hvor stor andel av geokodene per geonivå som får *minst 1 ikke-prikket tall* per år
+```{r}
+check_coverage_geolevel(save = TRUE)
+```
+
+- For hver GEOkode, hvor stor andel av mulige tall er uprikket (dekning) eller 
+```{r}
+check_coverage_geocode(save = TRUE)
 ```
 
