@@ -33,10 +33,10 @@ update_qcyear(2025) # Endre år ved behov
 - Fildumper lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
 
 ```{r}
-readfiles(cube.new = "MOBBING_0_2025-02-05-13-58", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
+readfiles(cube.new = "KUBENAVN", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
           modus.new = "KH", # KH eller NH
           recode.new = FALSE, # Rekode til gjeldende GEO?
-          cube.old = "MOBBING_0_2024-02-23-11-28", # Kan også være NULL
+          cube.old = "KUBENAVN", # Kan også være NULL
           modus.old = "KH", # KH eller NH
           recode.old = TRUE, # Rekode til gjeldende GEO? 
           comparecube = TRUE, # Lage comparecube? Denne trengs videre
@@ -115,7 +115,7 @@ plot_diff_timetrends(save = TRUE)
  - Henter informasjon fra KUBER-tabellen i ACCESS og sjekker prikking av både teller og nevner
  
 ```{r}
-check_censoring(dt = oldcube, save = TRUE)
+check_censoring(dt = newcube)
 ```
 
 ## Sammenligne antall prikker
@@ -192,8 +192,8 @@ compare_geolevels(comparison = "BK", save = TRUE)
     
 ```{r}
 unknown_bydel(crop = TRUE, # Skal bare de strata med størst andel ukjent bydel vises? (tabellen kan bli veldig stor hvis ikke)
-              maxrows = 4000, 
-              save = TRUE) # Maksimalt antall rader i tabellen (fordeles jevnt på KOMMUNE og TARGET)
+              maxrows = 4000, # Maksimalt antall rader i tabellen (fordeles jevnt på KOMMUNE og TARGET)
+              save = TRUE) # Hele tabellen lagres som csv
 ```
 
 ## Bydelstidsserier 
@@ -223,8 +223,6 @@ plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plotte
                 save = TRUE)
 ```
 
-
-
 # 6. Ekstremverdier år-til-år
 
 ## Boksplott år-til-år
@@ -250,7 +248,7 @@ plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plotte
 - Sammenligner nevner mot hhv forrige ikke-missing og høyeste nevner i tidsserien
 - Utviklet for ungdata-kuber, Kan brukes på alle kuber ved behov
 ```{r}
-check_nevner_change_ungdata()
+check_nevner_change(save = TRUE)
 ```
 
 ## Dekningsgrad prikking
@@ -259,7 +257,7 @@ check_nevner_change_ungdata()
 check_coverage_geolevel(save = TRUE)
 ```
 
-- For hver GEOkode, hvor stor andel av mulige tall er uprikket (dekning) eller 
+- For hver GEOkode, hvor stor andel av mulige tall er uprikket (dekning) eller prikket. 
 ```{r}
 check_coverage_geocode(save = TRUE)
 ```
