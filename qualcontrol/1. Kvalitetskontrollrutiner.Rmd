@@ -32,16 +32,31 @@ update_qcyear(2025) # Endre år ved behov
     - `comparecube` inneholder endringskolonner for alle verdikolonner. Alle rader i ny fil er med. 
 - Fildumper lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
 
+**OBS!** Dersom du må kode om en kategori for å få match, f.eks. om aldersgruppene ikke er identiske. 
+- Sett comparecube og dumps til NULL, og se neste kodeboks for å kode om og generere comparecube og fildumper
+
 ```{r}
-readfiles(cube.new = "KUBENAVN", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
+readfiles(cube.new = "DEPRESJON_UNGDATA_2025-02-24-09-54", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
           modus.new = "KH", # KH eller NH
           recode.new = FALSE, # Rekode til gjeldende GEO?
-          cube.old = "KUBENAVN", # Kan også være NULL
+          cube.old = "DEPRESJON_UNGDATA_2024-01-09-12-49", # Kan også være NULL
           modus.old = "KH", # KH eller NH
           recode.old = TRUE, # Rekode til gjeldende GEO? 
           comparecube = TRUE, # Lage comparecube? Denne trengs videre
           outliers = TRUE, # Skal ekstremverdier beregnes?
           dumps = getOption("qualcontrol.dumps")) # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
+```
+## Evt omkoding og fildumper
+- Skal bare brukes manuelt dersom du må kode om en kategori før du lager comparecube og lagrer fildumper
+- Ta bort # og kjør koden du trenger å bruke
+```{r eval=FALSE}
+# Kode om en kategori, f.eks. ALDER fra 0_17 til 1_17. 
+# - Før komma kan du filtrere ut hvilke rader du skal omkode,
+# - Inni let() kan du sette nye verdier for kolonnen du vil endre på
+# oldcube[ALDER == "0_17", let(ALDER = "1_17")] 
+
+# Etter omkoding kan du kjøre følgende for å lage ny comparefil og lagre fildumper:
+# make_comparecube(outliers = TRUE, dumpe = getOption("qualcontrol.dumps"))
 ```
 
 # 1. Deskriptiv grovsjekk
@@ -147,7 +162,7 @@ fra 0 (uprikket) til maks (serieprikket), både absolutt antall og i andel av to
 - Ny kube har vanligvis en mindre årgang, så tallene må sammenlignes litt på tvers av rader. 
 
 ```{r}
-compare_censoring_timeseries(, save = TRUE)
+compare_censoring_timeseries(save = TRUE)
 ```
 
 # 4. Sjekk aggregering
@@ -177,7 +192,7 @@ compare_geolevels(comparison = "OO", save = TRUE)
 ## Summerer bydel til kommune?
 
 ```{r}
-compare_geolevels(comparison = "BK", save = TRUE)
+compare_geolevels(dt = newcube, comparison = "BK", save = F)
 ```
 
 ## Hvor stor er andelen ukjent bydel
