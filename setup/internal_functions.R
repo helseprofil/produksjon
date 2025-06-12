@@ -1,7 +1,7 @@
 #' @title use_khfunctions
 #' @description
 #' Loads all functions from khfunctions from the specified branch
-use_khfunctions <- function(branch = "master"){
+use_khfunctions <- function(branch = "arkiv-pre-package"){
   source(paste0("https://raw.githubusercontent.com/helseprofil/khfunctions/", branch, "/R/KHsetup.R"))
 }
 
