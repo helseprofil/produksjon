@@ -1,21 +1,29 @@
 ---
 title: "khfunctions brukerfil"
 author: "Vegard"
-date: "2025-01-10"
+date: "2025-06-13"
 output: html_document
 ---
 
 # Last inn khfunctions
 
 - Dette laster inn alle funksjoner som er nødvendig for å bruke khfunctions. 
-- Disse funksjonene skal legge seg i Environment, og blir der til du restarter prosjektet. 
-- NB
-    - som standard leses funksjonene inn fra master branch
-    - For å kjøre den gamle versjonen av khfunctions per 10.januar 2025, endre branch til "arkiv-master-januar-2025" (den utkommenterte under)
-
+- Disse funksjonene legger seg i Environment, og blir der til du restarter prosjektet. 
+- NB!!
+    - For tiden jobbes det med å implementere khfunctions som en R-pakke
+    - I mellomtiden kan koden slik den var per 13.juni 2025 lastes fra branch "arkiv-pre-package"
+    
 ```{r setup, include=FALSE}
-use_khfunctions(branch = "master")
-# use_khfunctions(branch = "arkiv-master-januar-2025")
+use_khfunctions(branch = "arkiv-pre-package")
+```
+
+# Endre år
+
+- Dette styrer hvilken årgang friskvikfiler blir produsert fra. 
+- Gjeldende årgang er 2026
+- Hvis du trenger å endre årgang, kan du bruke koden under
+```{r}
+# options("khfunctions.year" = 2025)
 ```
 
 # Filgruppe

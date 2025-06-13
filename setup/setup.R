@@ -1,7 +1,7 @@
 Sys.setlocale("LC_ALL", "nb-NO.UTF-8")
 source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/internal_functions.R")
 
-lastupdated <- "2025.03.10"
+lastupdated <- "2025.06.13"
 if(is_updates(lastupdated)){
   update_userfiles()
 }

@@ -1,7 +1,7 @@
 ---
 title: "Kvalitetskontrollrutine"
 output: html_document
-date: "2024-09-12"
+date: "2025-06-13"
 ---
 
 De numererte overskriftene korresponderer med kolonner i KUBESTATUS-tabellen i ACCESS.
@@ -46,6 +46,7 @@ readfiles(cube.new = "DEPRESJON_UNGDATA_2025-02-24-09-54", # KUBENAVN_DATOTAG. F
           outliers = TRUE, # Skal ekstremverdier beregnes?
           dumps = getOption("qualcontrol.dumps")) # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
 ```
+
 ## Evt omkoding og fildumper
 - Skal bare brukes manuelt dersom du må kode om en kategori før du lager comparecube og lagrer fildumper
 - Ta bort # og kjør koden du trenger å bruke
@@ -55,8 +56,11 @@ readfiles(cube.new = "DEPRESJON_UNGDATA_2025-02-24-09-54", # KUBENAVN_DATOTAG. F
 # - Inni let() kan du sette nye verdier for kolonnen du vil endre på
 # oldcube[ALDER == "0_17", let(ALDER = "1_17")] 
 
+# Legge til en ny kolonne (f.eks. om gammel kube mangler INNVKAT)
+# oldcube[, let(INNVKAT = 0)]
+
 # Etter omkoding kan du kjøre følgende for å lage ny comparefil og lagre fildumper:
-# make_comparecube(outliers = TRUE, dumpe = getOption("qualcontrol.dumps"))
+# make_comparecube(outliers = TRUE, dumps = getOption("qualcontrol.dumps"))
 ```
 
 # 1. Deskriptiv grovsjekk
