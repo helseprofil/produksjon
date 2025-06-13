@@ -2,6 +2,10 @@
 #' @description
 #' Loads all functions from khfunctions from the specified branch
 use_khfunctions <- function(branch = "arkiv-pre-package"){
+  if(branch == "master"){
+    cat('OBS: Master branch er ikke lenger tilgjengelig, da denne er under ombygging til en R-pakke.\nSkifter til siste versjon før ombygging (branch = "arkiv-pre-package").')
+    branch <- "arkiv-pre-package"
+  }
   source(paste0("https://raw.githubusercontent.com/helseprofil/khfunctions/", branch, "/R/KHsetup.R"))
 }
 
