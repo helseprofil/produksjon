@@ -1,0 +1,119 @@
+---
+title: "khfunctions brukerfil"
+author: "Vegard"
+date: "2025-06-13"
+output: html_document
+---
+
+# Last inn khfunctions
+
+- Dette laster inn alle funksjoner som er nødvendig for å bruke khfunctions. 
+- Disse funksjonene legger seg i Environment, og blir der til du restarter prosjektet. 
+- NB!!
+    - For tiden jobbes det med å implementere khfunctions som en R-pakke
+    - I mellomtiden kan koden slik den var per 13.juni 2025 lastes fra branch "arkiv-pre-package"
+    
+```{r setup, include=FALSE}
+use_khfunctions(branch = "arkiv-pre-package")
+```
+
+# Endre år
+
+- Dette styrer hvilken årgang friskvikfiler blir produsert fra. 
+- Gjeldende årgang er 2026
+- Hvis du trenger å endre årgang, kan du bruke koden under
+```{r}
+# options("khfunctions.year" = 2025)
+```
+
+# Filgruppe
+
+- Filgruppen lagres i MELLOMPRODUKTER/STABLAORG
+- Det er viktig å ha med versjonert = TRUE, da vil det lagres en filgruppe både i mappen NYESTE og DATERT
+
+```{r cars}
+LagFilgruppe("FILGRUPPENAVN", 
+             versjonert = TRUE)
+```
+
+# Lage flere filgrupper
+
+- try() sørger for at man går videre til neste filgruppe dersom en feiler
+- kopier linjene for å sette opp kjøring av flere filgrupper etter hverandre
+
+```{r}
+try(LagFilgruppe("FILGRUPPENAVN", versjonert = T))
+try(LagFilgruppe("FILGRUPPENAVN", versjonert = T))
+try(LagFilgruppe("FILGRUPPENAVN", versjonert = T))
+```
+
+# Kube
+
+- Output lagres i objektet RESULTAT, med 3 datafiler
+    - RESULTAT$KUBE (full kube)
+    - RESULTAT$ALLVIS (statistikkbankkube)
+    - RESULTAT$QC (kvalitetskontrollkube)
+- Kubefilen lagres i mappen `DATERT`, kvalitetskontrollkuben i mappen `QC` og ACCESS-specs i mappen `specs`
+- Argumentet `alarm` kan settes til TRUE for å spille av en lyd når kuben er ferdig
+
+```{r}
+LagKubeDatertCsv("KUBENAVN", 
+                 alarm = FALSE) # Sett til TRUE for å spille en lyd når kuben er ferdig
+```
+
+# Lage flere kuber
+
+- try() sørger for at man går videre til neste kube dersom en feiler
+- kopier linjene for å sette opp kjøring av flere kuber etter hverandre
+
+```{r}
+try(LagKubeDatertCsv(("KUBENAVN")))
+try(LagKubeDatertCsv(("KUBENAVN")))
+try(LagKubeDatertCsv(("KUBENAVN")))
+```
+
+# Fildumper
+For å lagre fildumper bruker du følgende kode, i formatet list(DUMPPUNKT = "FORMAT")
+- Tilgjengelige formater er "CSV", "STATA" og "R". 
+    - Disse kan kombineres med list(DUMPPUNKT = c("FORMAT1", "FORMAT2")) for å gi dumper på flere formater. 
+- Dumppunkter Filgruppe
+    - RSYNT_PRE_FGLAGRINGpre
+    - RSYNT_PRE_FGLAGRINGpost
+    - RESHAPEpre
+    - RESHAPEpost
+    - RSYNT2pre
+    - RSYNT2post
+    - KODEBOKpre
+    - KODEBOKpost
+    - RSYNT1pre
+    - RSYNT1post
+- Dumppunkter Kube
+    - raaKUBE0
+    - maKUBE0
+    - anoKUBE1
+    - anoKUBE2
+    - anoKUBE3
+    - anoKUBE4
+    - KUBE_SLUTTREDIGERpre
+    - KUBE_SLUTTREDIGERpost
+    - STATAPRIKKpre
+    - STATAPRIKKpost # Rett før postprosess, kan brukes som postprosess-pre.
+    - RSYNT_POSTPROSESSpost
+
+```{r}
+dumps <- list() # Dette gir ingen dumper
+dumps <- list(STATAPRIKKpre = "CSV", STATAPRIKKpost = "STATA", RSYNT_POSTPROSESSpost = c("CSV", "STATA"))
+
+LagKubeDatertCsv("KUBENAVN", dumps = dumps)
+LagFilgruppe("FILGRUPPENAVN", versjonert = TRUE, dumps = dumps)
+```
+
+# Godkjentmappe
+
+Bruk kodene under for å lage nye godkjentmapper
+```{r}
+godkjent(profil = "FHP", # ELLER "OVP"
+         geoniv = "K", # Eller "B", "F"
+         year = 2025)
+```
+
