@@ -41,35 +41,36 @@ update_packages <- function(cran = TRUE, internal = TRUE){
   rm(ProfileSystems, DevelopSystems, check_R_version, envir = .GlobalEnv)
 }
 
-update_kh_packages_if_new_version <- function(){
+look_for_new_versions <- function(){
   message("Ser etter nye versjoner av norgeo, orgdata, khfunctions og qualcontrol...")
   installedpackages <- names(utils::installed.packages()[, "Package"])
+  outmessage <- character()
 
   for(package in c("norgeo", "orgdata", "khfunctions", "qualcontrol")){
     branch <- ifelse(package %in% c("norgeo", "khfunctions"), "master", "main")
-    newversion <- FALSE
-    gitdesc <- file.path("https://raw.githubusercontent.com/helseprofil", package, branch, "DESCRIPTION")
-    is_online <- orgdata:::is_online(gitdesc)
-
-    if(is_online){
-      if(package %in% installedpackages){
+    is_installed <- package %in% installedpackages
+    if(is_installed){
+      gitdesc <- file.path("https://raw.githubusercontent.com/helseprofil", package, branch, "DESCRIPTION")
+      is_newversion <- FALSE
+      if(orgdata:::is_online(gitdesc)){
         localversion <- utils::packageDescription(package)[["Version"]]
         gitversion <- data.table::fread(gitdesc, nrows = 4, fill = TRUE)[grepl("Version", V1), V2]
-        newversion <- numeric_version(gitversion) > numeric_version(localversion)
-      } else {
-        message("Pakken ", package, " ikke installert. Installerer nå")
-        remotes::install_github(paste0("helseprofil/", package, "@", branch))
+        is_newversion <- numeric_version(gitversion) > numeric_version(localversion)
       }
     }
 
-    if(newversion){
-      update <- utils::menu(title = paste0("Ny versjon av ", package, " tilgjengelig, vil du oppdatere nå?"),
-                            choices = c("Ja", "Nei"))
-      if(update){
-        message("Oppdaterer ", package, " fra versjon ", localversion," ---> ", gitversion,
-                "\nFølg instruksjonene i konsoll")
-        remotes::install_github(paste0("helseprofil/", package, "@", branch))
-      }
+    installcode <- paste0("remotes::install_github(helseprofil/", package, "@", branch, ")")
+    packagemessage <- character()
+    if(!is_installed){
+      packagemessage <- paste0("\n* ", package, " er ikke installert",
+                               "\n** installer med: ", installcode)
+    } else if(is_newversion){
+      packagemessage <- paste0("\n* ", package, " finnes i ny versjon (", localversion, " --> ", gitversion, ")",
+                               "\n** oppdater med: ", installcode)
     }
+
+    outmessage <- paste0(outmessage, packagemessage)
   }
+
+  if(length(outmessage) > 0) cat("\nOPPDATERINGER TILGJENGELIG!\n- Kjør kodene under (kanskje du må lukke prosjektet først).\n- Restart Produksjon etter oppdateringene\n", outmessage)
 }
