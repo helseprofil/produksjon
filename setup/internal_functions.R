@@ -41,8 +41,14 @@ update_packages <- function(cran = TRUE, internal = TRUE){
   rm(ProfileSystems, DevelopSystems, check_R_version, envir = .GlobalEnv)
 }
 
+
+#' @title look_for_new_versions
+#' @description
+#' Looks for new versions of norgeo, orgdata, khfunctions, and qualcontrol. If any updates are found, the user get the choice to update or continue.
+#' If the user choose to update, instructions regarding what to update is printed.
+#' If the user continues, or if there's no updates available, the welcome message is printed.
 look_for_new_versions <- function(){
-  message("Ser etter nye versjoner av norgeo, orgdata, khfunctions og qualcontrol...")
+  message("Ser etter nye versjoner av norgeo, orgdata, khfunctions og qualcontrol...\n")
   installedpackages <- names(utils::installed.packages()[, "Package"])
   outmessage <- character()
 
@@ -72,5 +78,9 @@ look_for_new_versions <- function(){
     outmessage <- paste0(outmessage, packagemessage)
   }
 
-  if(length(outmessage) > 0) cat("\nOPPDATERINGER TILGJENGELIG!\n- Kjør kodene under (kanskje du må lukke prosjektet først).\n- Restart Produksjon etter oppdateringene\n", outmessage)
+  updatemessage <- paste0("\nOPPDATERINGER TILGJENGELIG!\n- Kjør kodene under (kanskje du må lukke prosjektet først).\n- Restart Produksjon etter oppdateringene\n ", outmessage)
+  update <- 2
+  if(length(outmessage) > 0) update <- utils::menu(title = "Noen av de interne funksjonene bør oppdateres, vil du gjøre det nå?", choices = c("Ja", "Nei, bruk versjonen jeg allerede har"))
+  if(update == 1) message(updatemessage)
+  if(update == 2) source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/welcome.R")
 }
