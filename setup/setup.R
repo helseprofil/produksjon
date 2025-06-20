@@ -1,7 +1,7 @@
 Sys.setlocale("LC_ALL", "nb-NO.UTF-8")
 source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/internal_functions.R")
 
-# update_kh_packages_if_new_version()
+look_for_new_versions()
 
 lastupdated <- "2025.06.19"
 if(is_updates(lastupdated)){
