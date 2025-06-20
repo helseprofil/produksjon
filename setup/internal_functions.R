@@ -59,7 +59,7 @@ look_for_new_versions <- function(){
       }
     }
 
-    installcode <- paste0("remotes::install_github(helseprofil/", package, "@", branch, ")")
+    installcode <- paste0("remotes::install_github('helseprofil/", package, "@", branch, "')")
     packagemessage <- character()
     if(!is_installed){
       packagemessage <- paste0("\n* ", package, " er ikke installert",
