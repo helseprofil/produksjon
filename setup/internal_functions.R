@@ -78,9 +78,7 @@ look_for_new_versions <- function(){
     outmessage <- paste0(outmessage, packagemessage)
   }
 
-  updatemessage <- paste0("\nOPPDATERINGER TILGJENGELIG!\n- Kjør kodene under (kanskje du må lukke prosjektet først).\n- Restart Produksjon etter oppdateringene\n ", outmessage)
-  update <- 2
-  if(length(outmessage) > 0) update <- utils::menu(title = "Noen av de interne funksjonene bør oppdateres, vil du gjøre det nå?", choices = c("Ja", "Nei, bruk versjonen jeg allerede har"))
-  if(update == 1) message(updatemessage)
-  if(update == 2) source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/welcome.R")
+  updatemessage <- paste0("\n\nOBS!! OPPDATERINGER TILGJENGELIG!\n- Kjør kodene under (kanskje du må lukke prosjektet først).\n- Restart Produksjon etter oppdateringene\n ", outmessage)
+  if(length(outmessage) > 0) return(updatemessage)
+  invisible(NULL)
 }
