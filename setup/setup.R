@@ -15,6 +15,6 @@ if(interactive()){
   POPULATION_TABLE <- qualcontrol:::.popinfo
 }
 
-look_for_new_versions()
-
 source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/welcome.R")
+
+look_for_new_versions()
