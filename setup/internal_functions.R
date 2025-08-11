@@ -79,6 +79,6 @@ look_for_new_versions <- function(){
   }
 
   updatemessage <- paste0("\n\nOBS!! OPPDATERINGER TILGJENGELIG!\n- Kjør kodene under (kanskje du må lukke prosjektet først).\n- Restart Produksjon etter oppdateringene\n ", outmessage)
-  if(length(outmessage) > 0) return(updatemessage)
+  if(length(outmessage) > 0) warning(updatemessage)
   invisible(NULL)
 }
