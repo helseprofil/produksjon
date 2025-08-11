@@ -18,17 +18,18 @@ is_updates <- function(lastupdated){
 }
 
 update_userfiles <- function(){
-  choice <- utils::menu(choices = c("Yes", "No"),
-                        title = paste0("\nOppdaterte brukerfiler er tilgjengelige!!",
-                                       "\n\nOppdater (anbefalt)?"))
+  choice <- 0
+  if(is.interactive){
+    choice <- utils::menu(choices = c("Yes", "No"),
+                          title = paste0("\nOppdaterte brukerfiler er tilgjengelige!!",
+                                         "\n\nOppdater (anbefalt)?"))
+  }
 
   if(choice == 1){
     message("\nHenter oppdateringer...")
     invisible(system("git fetch origin main"))
     invisible(system("git reset --hard origin/main"))
     invisible(system("git pull"))
-  } else {
-    message("\nSkipper oppdateringer, brukerfilene kan være utdaterte.")
   }
 }
 
