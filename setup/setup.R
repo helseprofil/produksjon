@@ -15,7 +15,6 @@ if(interactive()){
   POPULATION_TABLE <- qualcontrol:::.popinfo
 }
 
-updates <- look_for_new_versions()
+look_for_new_versions()
 
 source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/welcome.R")
-if(!is.null(updates)) rlang::warn(updates, call. = FALSE)
