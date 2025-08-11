@@ -19,7 +19,7 @@ is_updates <- function(lastupdated){
 
 update_userfiles <- function(){
   choice <- 0
-  if(is.interactive){
+  if(interactive()){
     choice <- utils::menu(choices = c("Yes", "No"),
                           title = paste0("\nOppdaterte brukerfiler er tilgjengelige!!",
                                          "\n\nOppdater (anbefalt)?"))
