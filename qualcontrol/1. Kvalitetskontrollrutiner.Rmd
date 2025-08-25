@@ -57,6 +57,18 @@ readfiles(cube.new = "DEPRESJON_UNGDATA_2025-02-24-09-54", # KUBENAVN_DATOTAG. F
 # Legge til en ny kolonne (f.eks. om gammel kube mangler INNVKAT)
 # oldcube[, let(INNVKAT = 0)]
 
+# Endre oldcube fra 3-årig AAR 2012_2014 til ettårig AAR 2013_2013
+# for å kunne sammenligne ettårig newcube med treårig oldcube
+oldcube[, c("y1", "y2") := data.table::tstrsplit(AAR, "_")]
+oldcube[, AAR := paste0(as.integer(y1) + 1, "_", as.integer(y2) - 1)]
+oldcube[, c("y1", "y2") := NULL]
+
+# Endre oldcube fra ettårig AAR 2012_2012 til treårig AAR 2011_2013
+# for å kunne sammenligne treårig newcube med ettårig oldcube
+oldcube[, c("y1", "y2") := data.table::tstrsplit(AAR, "_")]
+oldcube[, AAR := paste0(as.integer(y1) - 1, "_", as.integer(y2) + 1)]
+oldcube[, c("y1", "y2") := NULL]
+
 # Etter omkoding kan du kjøre følgende for å lage ny comparefil og lagre fildumper:
 # make_comparecube(outliers = TRUE, dumps = getOption("qualcontrol.dumps"))
 ```
