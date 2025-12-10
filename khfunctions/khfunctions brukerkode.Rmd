@@ -1,7 +1,7 @@
 ---
 title: "khfunctions brukerfil"
 author: "Vegard"
-date: "2025-06-13"
+date: "2025-12-10"
 output: html_document
 ---
 
@@ -91,5 +91,20 @@ try(LagKubeDatertCsv(("KUBENAVN")))
 make_godkjent_folder(profil = "FHP", # ELLER "OVP"
                      geoniv = "K", # Eller "B", "F"
                      year = 2025)
+```
+
+# Lag friskvikfiler fra eksisterende kuber
+
+- Laster inn godkjent KUBE og genererer friskvikfiler med samme datotag. 
+- Disse legges i friskvik-csv-mappen, og overskrives om de eksisterer fra før. 
+- Godkjentmapper påvirkes ikke, og de nye filene blir eventuelt med fra neste godkjentmappe som kjøres. 
+
+- `cubename`: er navn på kuben, uten datotag. Gjeldende datotag hentes fra kubestatus
+- `friskvik_id`: Default er NULL, da lages alle friskvikindikatorer som er satt opp for kuben.   
+  - Kan også angi spesifikke friskvikfiler, angitt som f.eks c(1,2,3), tilsvarende ID-kolonnen. Dette kan være nyttig om du bare skal sette opp og lage en ny friskvikfil.
+- `year` brukes til å finne aktuelle friskvikoppsett og riktig kubestatus-tabell. Default er produksjonsåret som ligger i options.
+```{r}
+generate_specific_friskvik_indicators(cubename = "KUBENAVN",
+                                      friskvik_id = NULL)
 ```
 
