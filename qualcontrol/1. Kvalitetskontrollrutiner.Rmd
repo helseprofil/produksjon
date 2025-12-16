@@ -1,7 +1,7 @@
 ---
 title: "Kvalitetskontrollrutine"
 output: html_document
-date: "2025-06-13"
+date: "2025-12-16"
 ---
 
 De numererte overskriftene korresponderer med kolonner i KUBESTATUS-tabellen i ACCESS.
@@ -36,13 +36,13 @@ update_qcyear(2025) # Endre år ved behov
 - Sett comparecube og dumps til NULL, og se neste kodeboks for å kode om og generere comparecube og fildumper
 
 ```{r}
-readfiles(cube.new = "DEPRESJON_UNGDATA_2025-02-24-09-54", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
+readfiles(cube.new = "KUBENAVN_DATO", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
           recode.new = FALSE, # Rekode til gjeldende GEO?
-          cube.old = "DEPRESJON_UNGDATA_2024-01-09-12-49", # Kan også være NULL
+          cube.old = "KUBENAVN_DATO", # Kan også være NULL
           recode.old = TRUE, # Rekode til gjeldende GEO? 
           comparecube = TRUE, # Lage comparecube? Denne trengs videre
-          outliers = TRUE, # Skal ekstremverdier beregnes?
-          dumps = getOption("qualcontrol.dumps")) # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
+          outliers = T, # Skal ekstremverdier beregnes?
+          dumps = NULL) # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
 ```
 
 ## Evt omkoding og fildumper
@@ -112,7 +112,7 @@ diffvals_summary(save = TRUE)
 
 ## Antall og sum av differ per år
 ```{r}
-diffvals_summary(byyear = TRUE, save = TRUE)
+diffvals_summary(byyear = TRUE, save = F)
 ```
 
 ## Plott av forskjeller over tid
@@ -203,12 +203,14 @@ compare_geolevels(dt = newcube, comparison = "BK", save = F)
 - Dette beregnes for:
     - Første tilgjengelige av sumTELLER_uprikk, sumTELLER, TELLER_uprikk eller TELLER
     - Første tilgjengelige av sumNEVNER_uprikk, sumNEVNER, NEVNER_uprikk eller NEVNER
+- Andel ukjent kan beregnes basert på faktisk missing eller på ikke-prikkede tall ved å sette type til hhv "missing" eller "censored".
 - For å redusere størrelsen på tabellen kan den beskjæres til å bare vise de strataene med størst andel ukjent. Dette styres ved
     - crop: TRUE/FALSE
     - maxrows: Viser de x antall største andel ukjent for hver kommune/måltall, opp til maks antall rader. 
     
 ```{r}
-unknown_bydel(crop = TRUE, # Skal bare de strata med størst andel ukjent bydel vises? (tabellen kan bli veldig stor hvis ikke)
+unknown_bydel(type = "missing", # "missing" eller "censored"
+              crop = TRUE, # Skal bare de strata med størst andel ukjent bydel vises? (tabellen kan bli veldig stor hvis ikke)
               maxrows = 4000, # Maksimalt antall rader i tabellen (fordeles jevnt på KOMMUNE og TARGET)
               save = TRUE) # Hele tabellen lagres som csv
 ```
@@ -253,10 +255,13 @@ plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
 
 ## Tidsserier år-til-år
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_change, med mindre `save = FALSE`
+- show_change_low/high brukes for å redusere antall plott. Filtrerer ut strata med reduksjoner mindre enn show_change_low (-10 % er default), eller økninger større enn show_change_high (20 % er default). Angi bare tallet. 
 
 ```{r}
 plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plottes?
                 change = TRUE,
+                show_change_low = -10, # Viser bare strata med reduksjoner større enn -10 %
+                show_change_high = 20, # Viser bare strata med økninger større enn 20 %
                 save = TRUE)
 ```
 
