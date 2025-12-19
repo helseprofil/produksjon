@@ -307,9 +307,6 @@ plot_boxplot(dt = newcube_flag,
 - Default er å bare vise tidsserier med reduksjoner større enn 10% eller økninger større enn 20%. Disse kan endres ved:
     - `show_change_low`= -10 (du vil vise endringer mindre enn -10 %)
     - `show_change_high` = 20 (vise økninger større enn 20 %)
-=======
-- show_change_low/high brukes for å redusere antall plott. Filtrerer ut strata med reduksjoner mindre enn show_change_low (-10 % er default), eller økninger større enn show_change_high (20 % er default). Angi bare tallet. 
->>>>>>> 263acd8c0eee84797fe7a5e5cac66f50d3092da9
 
 ```{r chunk_output_type="console"}
 plot_timeseries(dt = newcube_flag,
