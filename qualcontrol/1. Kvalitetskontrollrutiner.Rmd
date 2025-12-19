@@ -1,13 +1,7 @@
 ---
 title: "Kvalitetskontrollrutine"
 output: html_document
-<<<<<<< HEAD
 date: "2025-12-19"
-editor_options: 
-  chunk_output_type: console
-=======
-date: "2025-12-16"
->>>>>>> 263acd8c0eee84797fe7a5e5cac66f50d3092da9
 ---
 
 De numererte overskriftene korresponderer med kolonner i KUBESTATUS-tabellen i ACCESS.
