@@ -48,7 +48,7 @@ readfiles(cube.new = "KUBENAVN_DATO", # KUBENAVN_DATOTAG. Funksjonen leser fra Q
           recode.old = TRUE, # Rekode til gjeldende GEO? 
           comparecube = TRUE, # Lage comparecube? Denne trengs videre
           outliers = T, # Skal ekstremverdier beregnes?
-          dumps = NULL) # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
+          dumps = getOption("qualcontrol.dumps")) # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
 ```
 
 ## Evt omkoding og fildumper
