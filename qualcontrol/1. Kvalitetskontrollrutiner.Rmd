@@ -253,7 +253,7 @@ plot_timeseries_bydel(save = TRUE)
 
 ```{r chunk_output_type="console"}
 plot_boxplot(dt = newcube_flag,
-             nlynew = TRUE, # Skal bare nye uteliggere markeres?
+             onlynew = TRUE, # Skal bare nye uteliggere markeres?
              save = TRUE)
 ```
 
