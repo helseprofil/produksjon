@@ -1,7 +1,9 @@
 ---
 title: "Kvalitetskontrollrutine"
 output: html_document
-date: "2025-06-13"
+date: "2025-12-19"
+editor_options: 
+  chunk_output_type: console
 ---
 
 De numererte overskriftene korresponderer med kolonner i KUBESTATUS-tabellen i ACCESS.
@@ -239,17 +241,34 @@ plot_timeseries_bydel(save = TRUE)
 
 ## Boksplott
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot, med mindre `save = FALSE`
+- Om du bare vil plotte enkelte kategorier kan du filtrere datasettet som sendes inn.
+- Dette kan drastisk redusere antallet plott
+  - `plot_boxplot(dt = newcube_flag[KOLONNE == "verdi"])` # velge en verdi
+  - `plot_boxplot(dt = newcube_flag[KOLONNE != "verdi"])` # velge bort en verdi
+  - `plot_boxplot(dt = newcube_flag[KOLONNE %in% c("verdi1", "verdi2")])` # velge flere verdier
+  - `plot_boxplot(dt = newcube_flag[!KOLONNE %in% c("verdi1", "verdi2")])` # velge bort flere verdier
+  - `plot_boxplot(dt = newcube_flag[KOLONNE1 == "verdi1" & KOLONNE2 == "verdi2"])` # Filtrere på flere kolonner
 
-```{r}
-plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
+```{r chunk_output_type="console"}
+plot_boxplot(dt = newcube_flag,
+             nlynew = TRUE, # Skal bare nye uteliggere markeres?
              save = TRUE)
 ```
 
 ## Tidsserier
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries, med mindre `save = FALSE`
+- Om du bare vil plotte enkelte kategorier kan du filtrere datasettet som sendes inn.
+- Dette kan drastisk redusere antallet plott
+  - `plot_timeseries(dt = newcube_flag[KOLONNE == "verdi"])` # velge en verdi
+  - `plot_timeseries(dt = newcube_flag[KOLONNE != "verdi"])` # velge bort en verdi
+  - `plot_timeseries(dt = newcube_flag[KOLONNE %in% c("verdi1", "verdi2")])` # velge flere verdier
+  - `plot_timeseries(dt = newcube_flag[!KOLONNE %in% c("verdi1", "verdi2")])` # velge bort flere verdier
+  - `plot_timeseries(dt = newcube_flag[KOLONNE1 == "verdi1" & KOLONNE2 == "verdi2"])` # Filtrere på flere kolonner
+- Default er å vise siste 10 år. Dette kan du endre med å sette `show_n_years` = 8 (antall år du vil vise) eller NULL for å vise alle år. 
 
-```{r}
-plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plottes?
+```{r chunk_output_type="console"}
+plot_timeseries(dt = newcube_flag,
+                onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plottes?
                 save = TRUE)
 ```
 
@@ -257,18 +276,38 @@ plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plotte
 
 ## Boksplott år-til-år
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/Boxplot_change, med mindre `save = FALSE`
+- Om du bare vil plotte enkelte kategorier kan du filtrere datasettet som sendes inn.
+- Dette kan drastisk redusere antallet plott
+  - `plot_boxplot(dt = newcube_flag[KOLONNE == "verdi"])` # velge en verdi
+  - `plot_boxplot(dt = newcube_flag[KOLONNE != "verdi"])` # velge bort en verdi
+  - `plot_boxplot(dt = newcube_flag[KOLONNE %in% c("verdi1", "verdi2")])` # velge flere verdier
+  - `plot_boxplot(dt = newcube_flag[!KOLONNE %in% c("verdi1", "verdi2")])` # velge bort flere verdier
+  - `plot_boxplot(dt = newcube_flag[KOLONNE1 == "verdi1" & KOLONNE2 == "verdi2"])` # Filtrere på flere kolonner
 
-```{r}
-plot_boxplot(onlynew = TRUE, # Skal bare nye uteliggere markeres?
+```{r chunk_output_type="console"}
+plot_boxplot(dt = newcube_flag,
+             onlynew = TRUE, # Skal bare nye uteliggere markeres?
              change = TRUE, 
              save = TRUE)
 ```
 
 ## Tidsserier år-til-år
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_change, med mindre `save = FALSE`
+- Om du bare vil plotte enkelte kategorier kan du filtrere datasettet som sendes inn.
+- Dette kan drastisk redusere antallet plott
+  - `plot_timeseries(dt = newcube_flag[KOLONNE == "verdi"])` # velge en verdi
+  - `plot_timeseries(dt = newcube_flag[KOLONNE != "verdi"])` # velge bort en verdi
+  - `plot_timeseries(dt = newcube_flag[KOLONNE %in% c("verdi1", "verdi2")])` # velge flere verdier
+  - `plot_timeseries(dt = newcube_flag[!KOLONNE %in% c("verdi1", "verdi2")])` # velge bort flere verdier
+  - `plot_timeseries(dt = newcube_flag[KOLONNE1 == "verdi1" & KOLONNE2 == "verdi2"])` # Filtrere på flere kolonner
+- Default er å vise siste 10 år. Dette kan du endre med å sette `show_n_years` = 8 (antall år du vil vise) eller NULL for å vise alle år. 
+- Default er å bare vise tidsserier med reduksjoner større enn 10% eller økninger større enn 20%. Disse kan endres ved:
+    - `show_change_low`= -10 (du vil vise endringer mindre enn -10 %)
+    - `show_change_high` = 20 (vise økninger større enn 20 %)
 
-```{r}
-plot_timeseries(onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plottes?
+```{r chunk_output_type="console"}
+plot_timeseries(dt = newcube_flag,
+                onlynew = TRUE, # Skal bare tidsserier med nye uteliggere plottes?
                 change = TRUE,
                 save = TRUE)
 ```
