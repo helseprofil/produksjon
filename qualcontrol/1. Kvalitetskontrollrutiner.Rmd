@@ -181,6 +181,8 @@ compare_censoring(by = "AAR", # Sammenligner per årgang, kan også kombineres m
 - Oppsummerer hvor mange tidsserier som har ulikt antall prikker
 fra 0 (uprikket) til maks (serieprikket), både absolutt antall og i andel av totalt antall tidsserier. 
 - Ny kube har vanligvis en mindre årgang, så tallene må sammenlignes litt på tvers av rader. 
+- Dersom det er innført nye kategorier, eller kategorier er fjernet, kan det være lurt å filtrere input-kubene for å sammenligne felles rader for å se at andelen serieprikket er på samme nivå. Se eksempel dersom ny kube har med undergrupper av UTDANN, mens den gamle bare hadde UTDANN == 0. Undergruppene er ofte mye mer serieprikket, og sammenligning totalt gir derfor ofte mindre mening.  
+    - `compare_censoring_timeseries(cube.new = newcube[UTDANN == 0],cube.old = oldcube)`
 
 ```{r}
 compare_censoring_timeseries(save = TRUE)
