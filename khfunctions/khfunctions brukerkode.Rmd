@@ -1,7 +1,7 @@
 ---
 title: "khfunctions brukerfil"
 author: "Vegard"
-date: "2025-12-10"
+date: "2026-01-23"
 output: html_document
 ---
 
@@ -70,7 +70,7 @@ try(LagFilgruppe("FILGRUPPENAVN", write = TRUE, dumps = list()))
     - `RSYNT_POSTPROSESSpre/post` (før og etter rsynt-punkt etter prikkingen)
 
 ```{r}
-LagKubeDatertCsv("KUBENAVN", write = T, alarm = FALSE, dumps = list()) 
+LagKUBE("MOBBING_1", write = T, alarm = FALSE, dumps = list()) 
 ```
 
 # Lage flere kuber
@@ -79,18 +79,19 @@ LagKubeDatertCsv("KUBENAVN", write = T, alarm = FALSE, dumps = list())
 - kopier linjene for å sette opp kjøring av flere kuber etter hverandre
 
 ```{r}
-try(LagKubeDatertCsv(("KUBENAVN")))
-try(LagKubeDatertCsv(("KUBENAVN")))
-try(LagKubeDatertCsv(("KUBENAVN")))
+try(LagKUBE(("KUBENAVN")))
+try(LagKUBE(("KUBENAVN")))
+try(LagKUBE(("KUBENAVN")))
 ```
 
 # Godkjentmappe
 
 - Bruk kodene under for å lage nye godkjentmapper
+- Fra khfunctions 1.1.5 kjører denne automatisk friskviksjekk fra qualcontrol, slik at alle filene blir sjekket for feil
+- For å endre årgang kan man bruke argumentet year = ønsket år. Default er produksjonsåret som ligger i options.
 ```{r}
 make_godkjent_folder(profil = "FHP", # ELLER "OVP"
-                     geoniv = "K", # Eller "B", "F"
-                     year = 2025)
+                     geoniv = "K") # "K", "B" eller "F"
 ```
 
 # Lag friskvikfiler fra eksisterende kuber
