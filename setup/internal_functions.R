@@ -10,11 +10,10 @@ use_khfunctions <- function(branch = "arkiv-pre-package"){
 }
 
 is_updates <- function(lastupdated){
-  localversion <- character()
-  if(file.exists("setup/setup.R")){
-    localversion <- sub(".*\"(.*)\".*", "\\1", grep("lastupdated <-", readLines("setup/setup.R"), value = T))
-  }
-  lastupdated != localversion
+  if(!file.exists("setup/setup.R")) return(TRUE)
+
+  localversion <- sub(".*\"(.*)\".*", "\\1", grep("lastupdated <-", readLines("setup/setup.R"), value = T))
+  !identical(lastupdated, localversion)
 }
 
 update_userfiles <- function(){
