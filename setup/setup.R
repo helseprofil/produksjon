@@ -1,12 +1,18 @@
 try(Sys.setlocale("LC_ALL", "nb-NO.UTF-8"), silent = T)
 
-
 safe_source <- function(url) {
+  tmp <- tempfile(fileext = ".R")
+  on.exit(unlink(tmp), add = TRUE)
+
   tryCatch(
-    source(url),
+    {
+     download.file(url, tmp, quiet = TRUE)
+     sys.source(tmp, envir = .GlobalEnv)
+     TRUE
+    },
     error = function(e) {
       message("Kunne ikke laste: ", url)
-      invisible(FALSE)
+      FALSE
     }
   )
 }
@@ -14,7 +20,7 @@ safe_source <- function(url) {
 safe_source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/internal_functions.R")
 options(warn = 1)
 
-lastupdated <- "2026.04.30"
+lastupdated <- "2026.05.04"
 if(interactive()){
 
   upd <- tryCatch(
@@ -23,6 +29,11 @@ if(interactive()){
   )
 
   if (isTRUE(upd)) {
+
+    if (Sys.which("git") == "") {
+      message("Git er ikke tilgjengelig – kan ikke oppdatere brukerfiler")
+      return(invisible(FALSE))
+    }
     update_userfiles()
   }
 }
@@ -32,9 +43,9 @@ rm(is_updates)
 rm(upd)
 
 if (requireNamespace("qualcontrol", quietly = TRUE)) {
-  GEO_VALID <- qualcontrol:::.validgeo
-  GEO_RECODE <- qualcontrol:::.georecode
-  POPULATION_TABLE <- qualcontrol:::.popinfo
+  assign("GEO_VALID", qualcontrol:::.validgeo, envir = .GlobalEnv)
+  assign("GEO_RECODE", qualcontrol:::.georecode, envir = .GlobalEnv)
+  assign("POPULATION_TABLE", qualcontrol:::.popinfo, envir = .GlobalEnv)
 }
 
 safe_source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/welcome.R")

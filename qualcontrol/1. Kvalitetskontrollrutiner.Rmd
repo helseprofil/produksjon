@@ -295,7 +295,6 @@ plot_boxplot(dt = newcube_flag,
 
 ## Tidsserier år-til-år
 - Plottene lagres i mappen: PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/PLOTT/TimeSeries_change, med mindre `save = FALSE`
-<<<<<<< HEAD
 - Om du bare vil plotte enkelte kategorier kan du filtrere datasettet som sendes inn.
 - Dette kan drastisk redusere antallet plott
   - `plot_timeseries(dt = newcube_flag[KOLONNE == "verdi"])` # velge en verdi
