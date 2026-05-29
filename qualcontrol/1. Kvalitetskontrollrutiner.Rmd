@@ -1,7 +1,7 @@
 ---
 title: "Kvalitetskontrollrutine"
 output: html_document
-date: "2025-12-19"
+date: "2026-05-29"
 ---
 
 De numererte overskriftene korresponderer med kolonner i KUBESTATUS-tabellen i ACCESS.
@@ -18,7 +18,7 @@ library(qualcontrol)
     - PRODUKSJON/VALIDERING/QualControl/**_PRODUKSJONSÅR_**/**_KUBENAVN_**/FILDUMPER
     
 ```{r}
-update_qcyear(2025) # Endre år ved behov
+update_qcyear(2026) # Endre år ved behov
 ```
 
 # Les inn fil(er), lag flaggede kuber og comparecube, lagre relevante fildumper
@@ -36,9 +36,9 @@ update_qcyear(2025) # Endre år ved behov
 - Sett comparecube og dumps til NULL, og se neste kodeboks for å kode om og generere comparecube og fildumper
 
 ```{r}
-readfiles(cube.new = "KUBENAVN_DATO", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
+readfiles(cube.new = "GJELD_2026-05-29-10-54", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
           recode.new = FALSE, # Rekode til gjeldende GEO?
-          cube.old = "KUBENAVN_DATO", # Kan også være NULL
+          cube.old = "GJELD_2025-02-24-14-59", # Kan også være NULL
           recode.old = TRUE, # Rekode til gjeldende GEO? 
           comparecube = TRUE, # Lage comparecube? Denne trengs videre
           outliers = T, # Skal ekstremverdier beregnes?
@@ -125,8 +125,20 @@ diffvals_summary(save = TRUE)
 
 ## Antall og sum av differ per år
 ```{r}
-diffvals_summary(byyear = TRUE, save = F)
+diffvals_summary(byyear = TRUE, save = TRUE)
 ```
+
+## Sjekke hvilket nivå av en dimensjon som har differ i en verdikolonne
+- Om du velger kolonner som ikke finnes i filen får du advarsel
+- Kan være nyttig for å se om det bare er GEO-koder med grenseendringer som har nevnerdiffer f.eks.
+```{r}
+# Eksempel: hvilke geokoder har differ for sumteller(_uprikk)
+diffvals_which_levels(dt = comparecube, dim = "GEO", val = "sumTELLER_uprikk") 
+# Eksempel: hvilke utdanningsnivå har differ for MEIS
+diffvals_which_levels(dt = comparecube, dim = "KJONN", val = "RATE") 
+
+```
+
 
 ## Plott av forskjeller over tid
 - Er det noen mønstre i forskjellen mellom ny og gammel kube? Blir forskjellene større jo lenger bak i tidsserien vi kommer?
@@ -143,6 +155,7 @@ plot_diff_timetrends(save = TRUE)
 ## Er det tall under prikkegrensen?
 
  - Henter informasjon fra KUBER-tabellen i ACCESS og sjekker prikking av både teller og nevner
+ - Viser også prikkegrensene som er satt i ACCESS *akkurat nå, ikke nødvendigvis når kuben ble kjørt!!*
  
 ```{r}
 check_censoring(dt = newcube)
@@ -182,8 +195,26 @@ fra 0 (uprikket) til maks (serieprikket), både absolutt antall og i andel av to
 compare_censoring_timeseries(save = TRUE)
 ```
 
+## Sjekk rader som er ulikt prikket
+- Bruker de nye prikkekolonnene til å vise hvorfor en rad er prikket
+- Er en ny eller utgått prikk forklart av ulik nabo- eller serieprikking?
+- Bruk View() for å kunne sortere i tabellen
+  - Output kan filtreres, bruk de utkommenterte radene som utgangspunkt.
+  - `SPVFLAGG_DIFF` er SPV_ny - SPV_gammel, < 0 = utgått, > 0 = ny prikk. 
+
+```{r}
+View(explore_different_censoring())
+
+# View(explore_different_censoring()[SPVFLAGG_DIFF > 0]) # Bare nye prikker
+# View(explore_different_censoring()[SPVFLAGG_DIFF < 0 & KJONN == 0]) # Bare utgåtte prikker
+# View(explore_different_censoring()[SPVFLAGG_DIFF < 0 & ALDER == ... & KJONN == ... & AAR == ...]) # Filtrere ut ønskede strata
+
+```
+
+
 # 4. Sjekk aggregering
 
+- Om undernivået > overnivået er allerede sjekket i kubekjøringen, men de eksakte tallene vises her.
 - Bruker den første tilgjengelige av sumTELLER_uprikk, sumTELLER, TELLER_uprikk eller TELLER for sammenligning. 
     - For å sjekke hvilken som brukes kan du bruke  `select_teller_pri(names(newcube))`
 - `comparison` må være en av "FL", "KF", "BK" eller "OO" for å sammenligne hhv Land (L), Fylke (F), Kommune (K), Bydel (B) og Oslo (O)
@@ -210,24 +241,6 @@ compare_geolevels(comparison = "OO", save = TRUE)
 
 ```{r}
 compare_geolevels(dt = newcube, comparison = "BK", save = F)
-```
-
-## Hvor stor er andelen ukjent bydel
-
-- Beregner andelen ukjent som ratioen av totalt antall i bydel og kommune, for alle komplette strata (ikke noen prikkede eller manglende tall). 
-- Dette beregnes for:
-    - Første tilgjengelige av sumTELLER_uprikk, sumTELLER, TELLER_uprikk eller TELLER
-    - Første tilgjengelige av sumNEVNER_uprikk, sumNEVNER, NEVNER_uprikk eller NEVNER
-- Andel ukjent kan beregnes basert på faktisk missing eller på ikke-prikkede tall ved å sette type til hhv "missing" eller "censored".
-- For å redusere størrelsen på tabellen kan den beskjæres til å bare vise de strataene med størst andel ukjent. Dette styres ved
-    - crop: TRUE/FALSE
-    - maxrows: Viser de x antall største andel ukjent for hver kommune/måltall, opp til maks antall rader. 
-    
-```{r}
-unknown_bydel(type = "missing", # "missing" eller "censored"
-              crop = TRUE, # Skal bare de strata med størst andel ukjent bydel vises? (tabellen kan bli veldig stor hvis ikke)
-              maxrows = 4000, # Maksimalt antall rader i tabellen (fordeles jevnt på KOMMUNE og TARGET)
-              save = TRUE) # Hele tabellen lagres som csv
 ```
 
 ## Bydelstidsserier 
@@ -316,7 +329,9 @@ plot_timeseries(dt = newcube_flag,
                 save = TRUE)
 ```
 
-# EKSTRA: spesialsjekker
+# ---
+# EKSTRA: spesialsjekker og diverse ekstra
+
 ## Nevnerkontroll
 - Sammenligner nevner mot hhv forrige ikke-missing og høyeste nevner i tidsserien
 - Utviklet for ungdata-kuber, Kan brukes på alle kuber ved behov
@@ -335,3 +350,33 @@ check_coverage_geolevel(save = TRUE)
 check_coverage_geocode(save = TRUE)
 ```
 
+
+## Hvor stor er andelen ukjent bydel
+
+- Ukjent bydel > grensene som er satt i khfunctions er allerede skjult med SPVFLAGG = 1 og dekningprikket = 1
+- Beregner andelen ukjent som ratioen av totalt antall i bydel og kommune, for alle komplette strata (ikke noen prikkede eller manglende tall). 
+- Dette beregnes for:
+    - Første tilgjengelige av sumTELLER_uprikk, sumTELLER, TELLER_uprikk eller TELLER
+    - Første tilgjengelige av sumNEVNER_uprikk, sumNEVNER, NEVNER_uprikk eller NEVNER
+- Andel ukjent kan beregnes basert på faktisk missing eller på ikke-prikkede tall ved å sette type til hhv "missing" eller "censored".
+- For å redusere størrelsen på tabellen kan den beskjæres til å bare vise de strataene med størst andel ukjent. Dette styres ved
+    - crop: TRUE/FALSE
+    - maxrows: Viser de x antall største andel ukjent for hver kommune/måltall, opp til maks antall rader. 
+    
+### Viser beregning på alle strata med komplette ikkeprikkede tall
+    
+```{r}
+unknown_bydel(type = "missing", # "missing" eller "censored"
+              crop = TRUE, # Skal bare de strata med størst andel ukjent bydel vises? (tabellen kan bli veldig stor hvis ikke)
+              maxrows = 4000, # Maksimalt antall rader i tabellen (fordeles jevnt på KOMMUNE og TARGET)
+              save = TRUE) # Hele tabellen lagres som csv
+```
+
+### Sjekker bare strata som er uprikket
+
+```{r}
+unknown_bydel(type = "censored", # "missing" eller "censored"
+              crop = TRUE, # Skal bare de strata med størst andel ukjent bydel vises? (tabellen kan bli veldig stor hvis ikke)
+              maxrows = 4000, # Maksimalt antall rader i tabellen (fordeles jevnt på KOMMUNE og TARGET)
+              save = F) # Hele tabellen lagres som csv
+```
