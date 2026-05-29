@@ -20,7 +20,7 @@ safe_source <- function(url) {
 safe_source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/internal_functions.R")
 options(warn = 1)
 
-lastupdated <- "2026.05.04"
+lastupdated <- "2026.05.29"
 if(interactive()){
 
   upd <- tryCatch(
