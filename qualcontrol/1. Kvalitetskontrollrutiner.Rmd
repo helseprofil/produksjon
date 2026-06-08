@@ -1,7 +1,7 @@
 ---
 title: "Kvalitetskontrollrutine"
 output: html_document
-date: "2026-05-29"
+date: "2026-06-08"
 ---
 
 De numererte overskriftene korresponderer med kolonner i KUBESTATUS-tabellen i ACCESS.
@@ -36,13 +36,13 @@ update_qcyear(2026) # Endre år ved behov
 - Sett comparecube og dumps til NULL, og se neste kodeboks for å kode om og generere comparecube og fildumper
 
 ```{r}
-readfiles(cube.new = "GJELD_2026-05-29-10-54", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
+readfiles(cube.new = "BEFVEKST_2026-06-05-13-17", # KUBENAVN_DATOTAG. Funksjonen leser fra QC-mappen om filen finnes der, ellers DATERT. 
           recode.new = FALSE, # Rekode til gjeldende GEO?
-          cube.old = "GJELD_2025-02-24-14-59", # Kan også være NULL
+          cube.old = "BEFVEKST_2025-10-20-14-06", # Kan også være NULL
           recode.old = TRUE, # Rekode til gjeldende GEO? 
           comparecube = TRUE, # Lage comparecube? Denne trengs videre
           outliers = T, # Skal ekstremverdier beregnes?
-          dumps = getOption("qualcontrol.dumps")) # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
+          dumps = NULL) # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
 ```
 
 ## Evt omkoding og fildumper
@@ -89,9 +89,11 @@ compare_colnames()
 ## Nivåer i dimensjonene
 
 - Sjekk om det er noen nye eller utgåtte nivåer i de ulike dimensjonene sammenlignet med forrige fil
+- OBS 2026/2027, med innføring av levekårssoner oversvømmes kolonnen med nye verdier for GEO. Disse kan derfor med fordel filtreres ut.
 
 ```{r}
-compare_dimensions()
+compare_dimensions(cube.new = newcube[GEOniv != "V"], 
+                   cube.old = oldcube[GEOniv != "V"])
 ```
 
 ## Tidsserier på landsnivå
