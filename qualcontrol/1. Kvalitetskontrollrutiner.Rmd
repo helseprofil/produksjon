@@ -1,7 +1,7 @@
 ---
 title: "Kvalitetskontrollrutine"
 output: html_document
-date: "2026-06-08"
+date: "2026-06-09"
 ---
 
 De numererte overskriftene korresponderer med kolonner i KUBESTATUS-tabellen i ACCESS.
@@ -333,6 +333,12 @@ plot_timeseries(dt = newcube_flag,
 
 # ---
 # EKSTRA: spesialsjekker og diverse ekstra
+
+## BEFVEKST
+```{r}
+check_befvekst(statusfolder = "KUBESTATUS_2027")
+```
+
 
 ## Nevnerkontroll
 - Sammenligner nevner mot hhv forrige ikke-missing og høyeste nevner i tidsserien
