@@ -1,7 +1,7 @@
 ---
 title: "khfunctions brukerfil"
 author: "Vegard"
-date: "2026-05-29"
+date: "2026-06-09"
 output: html_document
 ---
 
@@ -70,7 +70,7 @@ try(LagFilgruppe("FILGRUPPENAVN", write = TRUE, dumps = list()))
     - `RSYNT_POSTPROSESSpre/post` (før og etter rsynt-punkt etter prikkingen)
 
 ```{r}
-LagKUBE("ALKOHOL_UNGDATA", write = F, alarm = FALSE, dumps = list()) 
+LagKUBE("ALKOHOL_UNGDATA", write = TRUE, alarm = FALSE, dumps = list()) 
 ```
 
 ## Manuell gjennomgang av KUBE-output
