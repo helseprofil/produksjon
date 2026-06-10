@@ -1,0 +1,91 @@
+---
+title: "Utforsk datafil"
+output: html_document
+date: "2026-06-10"
+---
+
+# Laste inn pakker
+- Bruker i hovedsak arrow (lese parquet) og data.table, så laster alltid inn disse
+```{r}
+library(arrow)
+library(data.table)
+```
+
+# Laste inn en datafil
+
+- filen lagres som data.table i environment med navnet dt (velg evt noe annet), som må brukes når man skal se på filen
+
+```{r}
+# parquet-filer
+dt <- setDT(read_parquet("FILSTI.parquet"))
+
+# csv-filer
+dt <- fread("FILSTI.csv")
+```
+
+# Vise fil som tabell i eget vindu
+
+- Her kan du sortere kolonner osv
+- Kan kombineres med filtrering for å vise mindre deler av tabellen
+```{r}
+View(dt)
+```
+
+# Filtrering og beregning
+
+- data.table bruker i utgangspunktet formelen dt[i, j, by]
+- i = operasjoner på rader, f.eks. filtrering
+- j (etter komme) = operasjoner på kolonner, f.eks. å velge ut eller lage nye kolonner
+- by = grupperte operasjoner
+
+## Filtrere rader
+
+- Kan vises i egen sorterbar tabell med View() rundt
+- Filtrene kan kombineres med & 
+
+```{r}
+# Ren filtrering på verdier 
+dt[KOLONNENAVN == x]
+dt[KOLONNENAVN %in% c(x, y)]
+dt[KOLONNENAVN %notin% c(x,y)]
+dt[ALDER == "0_120" & GEOniv == "K"]
+dt[ALDER == "0_120" & GEOniv %in% c("K", "B")]
+
+# Filtrering med regex
+dt[grepl("mønster", KOLONNE)] # Velger rader hvor KOLONNE matcher mønster
+dt[grepl("^STARTERMED", KOLONNE)] # ^ i mønsteret betyr at du vil ha rader som starter med, f.eks. GEO starter på 4601 for å få alle rader som hører til Bergen grepl("^4601", GEO)
+dt[grepl("SLUTTERMED$", KOLONNE)] # $ i mønsteret viser til slutt, matcher på rader som slutter med dette, f.eks. GEOkoder som slutter med 99 grepl("99$", GEO)
+```
+
+## Velge kolonner
+
+- Det enkleste er å bruke .SD og .SDcols. 
+- .SD er et spesialtegn som viser til et subdatasett. Med mindre .SDcols er angitt, viser .SD til hele datasettet. 
+- Kan kombineres med å filtrere rader
+
+```{r}
+dt[, .SD, .SDcols = c("KOLONNE1", "KOLONNE2", osv)]
+
+# Eksempel: utvalgte kolonner, bare kommunetall
+dt[GEOniv == "K", .SD, .SDcols = c("GEO", "sumTELLER", "MEIS", "SPVFLAGG")]
+```
+
+## Gjøre beregninger
+
+- Kan bruke vanlige funksjoner som max, min, mean, sum
+  - Nyttig spesialtegn: .N, beregner antall rader
+  - Lurt å sett na.rm = TRUE, for å ignorere missing
+- Grupperte beregninger ved å sette by = kolonnene du vil gruppere på
+- Kan kombineres med filterfunksjonene over, om du f.eks. bare vil se på totalkategorier, enkelte geonivåer osv. 
+
+```{r}
+dt[, max(RATE, na.rm = T), by = GEOniv] # høyeste RATE per geoniv
+dt[, min(MEIS, na.rm = T), by = KJONN] # minste MEIS per KJØNN
+dt[, .N, by = GEOniv] # Antall rader per geoniv
+dt[, mean(MEIS), by = c("GEOniv", "ALDER")] # gjennomsnittlig MEIS per GEOniv + ALDER. Bruk kolonnenavn som tekst om du skal kombinere flere med c() 
+dt[GEOniv == "V", .N, by = SPVFLAGG] # Antall rader per SPV-flagg for LKS
+dt[GEOniv == "V", sum(SPVFLAGG == 0) / .N] # Andelen uprikkede rader for LKS (antallet rader med SPVFLAGG == 0 delt på totalt antall rader.)
+dt[GEOniv == "V", sum(SPVFLAGG == 0) / .N, by = KJONN] # Samme som over, men andelen uprikkede rader per kjønn)
+dt[, sum(SPVFLAGG == 0) / .N, by = GEOniv] # Andelen uprikkede rader per GEOnivå
+```
+

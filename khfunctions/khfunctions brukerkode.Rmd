@@ -1,7 +1,7 @@
 ---
 title: "khfunctions brukerfil"
 author: "Vegard"
-date: "2026-06-09"
+date: "2026-06-10"
 output: html_document
 ---
 
@@ -84,6 +84,7 @@ LagKUBE("ALKOHOL_UNGDATA", write = TRUE, alarm = FALSE, dumps = list())
 - Filtrere på GEOniv i QC-fil: 
     - GEO > 999999 = levekårssone
     - GEO > 9999 & GEO < 999999 = bydel
+    - grepl("^4601", GEO) = alle geokoder som starter med 4601, om man vil se alle LKS i Bergen. 
 
 Kodeeksempler:    
 ```{r}
@@ -91,6 +92,7 @@ Kodeeksempler:
 # View(RESULTAT$QC[dekningprikket == 1]) # Vis tabell over alle rader som har blitt dekningprikket, 
 # View(RESULTAT$QC[dekningprikket == 1 & KJONN == ..., & AAR == ....]) # Legge til flere filtre
 # RESULTAT$QC[dekningprikket == 1, .N, by = KJONN] # Kan se antall rader som er dekningprikket per kategoro (f.eks. kjønn, utdanning..)
+# RESULTAT$QC[grepl("^4601", GEO)] # Finn alle rader med GEO som starter på 4601
 ```
 
 # Lage flere kuber
