@@ -48,9 +48,10 @@ if (requireNamespace("qualcontrol", quietly = TRUE)) {
   assign("POPULATION_TABLE", qualcontrol:::.popinfo, envir = .GlobalEnv)
 }
 
-safe_source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/welcome.R")
-
 # "OPPVARMING" AV FILMAPPER
 # Midlertidig fiks av lese- og skriveproblematikk
 d <- varm_opp_mappesystem()
+
+safe_source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/welcome.R")
+
 try(look_for_new_versions(), silent = T)
