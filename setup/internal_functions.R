@@ -71,3 +71,10 @@ look_for_new_versions <- function(){
   if(length(outmessage) > 0) message(updatemessage)
   invisible(NULL)
 }
+
+varm_opp_mappesystem <- function(){
+  cat("\nVarmer opp mappesystem ved å lese befolkningsfil (bare noen rader)")
+  d <- arrow::open_dataset("O:/Prosjekt/FHP/PRODUKSJON/PRODUKTER/FILGRUPPER/NYESTE/BEF_GKny_alder_aar_geo")
+  d <- dplyr::filter(d, alder %in% c("18_29") & AARl == 2026 & lks == 0) |> dplyr::collect()
+  return(d[1:10])
+}
