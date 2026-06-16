@@ -1,7 +1,7 @@
 ---
 title: "Kvalitetskontrollrutine"
 output: html_document
-date: "2026-06-09"
+date: "2026-06-16"
 ---
 
 De numererte overskriftene korresponderer med kolonner i KUBESTATUS-tabellen i ACCESS.
@@ -41,8 +41,8 @@ readfiles(cube.new = "BEFVEKST_2026-06-05-13-17", # KUBENAVN_DATOTAG. Funksjonen
           cube.old = "BEFVEKST_2025-10-20-14-06", # Kan også være NULL
           recode.old = TRUE, # Rekode til gjeldende GEO? 
           comparecube = TRUE, # Lage comparecube? Denne trengs videre
-          outliers = T, # Skal ekstremverdier beregnes?
-          dumps = NULL) # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
+          outliers = TRUE, # Skal ekstremverdier beregnes?
+          dumps = getOption("qualcontrol.dumps")) # default er comparecube og newcube_flag. Kan også være NULL for ingen fildumper.
 ```
 
 ## Evt omkoding og fildumper
@@ -242,7 +242,7 @@ compare_geolevels(comparison = "OO", save = TRUE)
 ## Summerer bydel til kommune?
 
 ```{r}
-compare_geolevels(dt = newcube, comparison = "BK", save = F)
+compare_geolevels(dt = newcube, comparison = "BK", save = TRUE)
 ```
 
 ## Bydelstidsserier 
@@ -386,5 +386,5 @@ unknown_bydel(type = "missing", # "missing" eller "censored"
 unknown_bydel(type = "censored", # "missing" eller "censored"
               crop = TRUE, # Skal bare de strata med størst andel ukjent bydel vises? (tabellen kan bli veldig stor hvis ikke)
               maxrows = 4000, # Maksimalt antall rader i tabellen (fordeles jevnt på KOMMUNE og TARGET)
-              save = F) # Hele tabellen lagres som csv
+              save = TRUE) # Hele tabellen lagres som csv
 ```
