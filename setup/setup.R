@@ -20,7 +20,7 @@ safe_source <- function(url) {
 safe_source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/internal_functions.R")
 options(warn = 1)
 
-lastupdated <- "2026.06.10"
+lastupdated <- "2026.06.16"
 if(interactive()){
 
   upd <- tryCatch(
@@ -49,5 +49,11 @@ if (requireNamespace("qualcontrol", quietly = TRUE)) {
 }
 
 safe_source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/welcome.R")
+
+# "OPPVARMING" AV FILMAPPER
+# Midlertidig fiks av lese- og skriveproblematikk
+d <- arrow::open_dataset("O:/Prosjekt/FHP/PRODUKSJON/PRODUKTER/FILGRUPPER/NYESTE/BEF_GKny_alder_aar_geo")
+d <- dplyr::filter(d, alder %in% c("18_29") & AARl == 2026 & lks == 0) |> dplyr::collect()
+rm(d)
 
 try(look_for_new_versions(), silent = T)
