@@ -1,6 +1,3 @@
-try(Sys.setlocale("LC_ALL", "nb-NO.UTF-8"), silent = T)
-
-# Manuell oppstartsfunksjon, unngår nettverkskall i rprofile.
 start_produksjon <- function() {
 
   bootstrap_local <- "setup/bootstrap.R"
@@ -17,8 +14,4 @@ start_produksjon <- function() {
     "source('", bootstrap_url, "')\n\n",
     "Deretter kan du kjøre start_produksjon() igjen."
   )
-}
-
-if (interactive()) {
-  message("Kjør start_produksjon() for å initialisere prosjektet")
 }
