@@ -20,5 +20,5 @@ start_produksjon <- function() {
 }
 
 if (interactive()) {
-  message("Kjør start_produksjon() for å initialisere prosjektet")
+  message("\n\nKjør start_produksjon() for å initialisere prosjektet\n\n")
 }
