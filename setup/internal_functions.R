@@ -104,4 +104,6 @@ varm_opp_mappesystem <- function(){
                      pattern = "\\.parquet$",
                      full.names = TRUE)[1]
   d <- arrow::ParquetFileReader$create(file)
+  invisible(d$GetSchema())
+  invisible(d$ReadRowGroup(0))
 }
