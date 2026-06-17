@@ -47,9 +47,8 @@ if (exists("upd")) rm(upd)
 # "OPPVARMING" AV FILMAPPER
 # Midlertidig fiks av lese- og skriveproblematikk
 if (interactive()) {
-  try(d <- varm_opp_mappesystem(), silent = TRUE)
+  try(varm_opp_mappesystem(), silent = TRUE)
 }
-
 
 safe_source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/welcome.R")
 

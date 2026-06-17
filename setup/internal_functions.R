@@ -99,8 +99,9 @@ look_for_new_versions <- function(){
 }
 
 varm_opp_mappesystem <- function(){
-  cat("\nVarmer opp mappesystem ved å lese befolkningsfil (bare noen rader)...\n\n")
-  d <- arrow::open_dataset("O:/Prosjekt/FHP/PRODUKSJON/PRODUKTER/FILGRUPPER/NYESTE/BEF_GKny_alder_aar_geo")
-  d <- dplyr::filter(d, alder %in% c("18_29") & AARl == 2026 & lks == 0) |> dplyr::collect()
-  return(d[1:10])
+  message("\n...'Varmer opp' mappesystem ved å lese fra en filgruppe...\n\n")
+  file <- list.files("O:/Prosjekt/FHP/PRODUKSJON/PRODUKTER/FILGRUPPER/NYESTE",
+                     pattern = "\\.parquet$",
+                     full.names = TRUE)[1]
+  d <- arrow::ParquetFileReader$create(file)
 }
