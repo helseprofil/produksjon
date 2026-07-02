@@ -89,3 +89,18 @@ dt[GEOniv == "V", sum(SPVFLAGG == 0) / .N, by = KJONN] # Samme som over, men and
 dt[, sum(SPVFLAGG == 0) / .N, by = GEOniv] # Andelen uprikkede rader per GEOnivå
 ```
 
+# GEO: kode til navn
+
+- Bruk disse kodene for å hente geonavn fra geokode direkte fra klass
+
+```{r}
+# Kommune
+norgeo::get_code("k")[code == 4601]
+
+# Bydel
+norgeo::get_code("b")[code == 460101]
+
+# Levekår
+norgeo::get_code("l")[code == 1103010001]
+```
+
