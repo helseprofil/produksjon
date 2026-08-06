@@ -1,0 +1,25 @@
+---
+title: "Forsvaret aggregering av originalfiler"
+output: html_document
+date: "2026-08-06"
+---
+
+```{r setup, include=FALSE}
+source("https://raw.githubusercontent.com/helseprofil/backend/main/spesialbehandling/R/forsvaret.R")
+```
+
+# Funksjoner for å aggregere rådatafiler fra forsvaret
+- Bruk path_raw = full sti til råfilen
+- aargang = året filen har data for
+- gk = TRUE/FALSE. Dersom filen ikke har gk settes alle geokoder til xxxx9999 for å få kommunetall
+
+# Alle filer lander i ORGDATA/FORSVARET/RAADATA/AGGREGERT og i undermappe for SVOMMING/TRENING/OVERVEKT
+
+# Eksempel
+
+```{r cars}
+aggreger_forsvaret(path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/RAADATA/2026/2026-03-12 leveranse FHI for 2006 kull_2023.xlsx",
+                   aargang = 2025,
+                   gk = TRUE)
+
+```

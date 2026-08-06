@@ -1,11 +1,3 @@
-# Funksjoner for å aggregere rådatafiler fra forsvaret
-
-path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/RAADATA/2026/2026-03-12 leveranse FHI for 2006 kull_2023.xlsx" # 2023
-path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/RAADATA/2026/FHI leveranse 2026_2025.xlsx" # 2025
-path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/RAADATA/2026/forsvaret_2021_grunnkrets.csv" # 2021
-path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/RAADATA/2026/forsvaret_2022_grunnkrets.csv" # 2022
-path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/RAADATA/2026/forsvaret_2024_grunnkrets.csv" # 2024
-
 aggreger_forsvaret <- function(path_raw, aargang, gk = TRUE){
 
   type <- tools::file_ext(path_raw)
