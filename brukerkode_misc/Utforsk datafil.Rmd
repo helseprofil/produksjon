@@ -53,6 +53,7 @@ dt[ALDER == "0_120" & GEOniv %in% c("K", "B")]
 
 # Filtrering med regex
 dt[grepl("mønster", KOLONNE)] # Velger rader hvor KOLONNE matcher mønster
+dt[grepl("mønster", KOLONNE, ignore.case = TRUE)] # Velger rader hvor KOLONNE matcher mønster, case-insensitivt
 dt[grepl("^STARTERMED", KOLONNE)] # ^ i mønsteret betyr at du vil ha rader som starter med, f.eks. GEO starter på 4601 for å få alle rader som hører til Bergen grepl("^4601", GEO)
 dt[grepl("SLUTTERMED$", KOLONNE)] # $ i mønsteret viser til slutt, matcher på rader som slutter med dette, f.eks. GEOkoder som slutter med 99 grepl("99$", GEO)
 ```
@@ -96,11 +97,14 @@ dt[, sum(SPVFLAGG == 0) / .N, by = GEOniv] # Andelen uprikkede rader per GEOniv�
 ```{r}
 # Kommune
 norgeo::get_code("k")[code == 4601]
+norgeo::get_code("k")[name == "Bergen"]
+norgeo::get_code("k")[grepl("bergen", name, ignore.case = TRUE)]
 
 # Bydel
 norgeo::get_code("b")[code == 460101]
 
 # Levekår
 norgeo::get_code("l")[code == 1103010001]
+norgeo::get_code("l")[grepl("^4601", code)] # Alle sonene i Bergen (starter med 4601)
 ```
 

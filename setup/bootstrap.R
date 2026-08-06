@@ -28,3 +28,5 @@ if(!ok) {
 if(ok){
   message("\nProduksjonprosjektet startet og klar til bruk")
 }
+
+rm(ok)
