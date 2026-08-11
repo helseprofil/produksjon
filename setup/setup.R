@@ -1,4 +1,5 @@
-try(Sys.setlocale("LC_ALL", "nb-NO.UTF-8"), silent = T)
+suppressWarnings(try(Sys.setlocale("LC_ALL", "nb-NO.UTF-8"), silent = TRUE))
+suppressWarnings(try(duckdb::duckdb(shared_home = FALSE),silent = TRUE))
 
 if (!exists("safe_source", mode = "function")) {
   safe_source <- function(url) {
