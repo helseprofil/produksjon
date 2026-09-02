@@ -56,7 +56,7 @@ aggreger_forsvaret_gk <- function(path_raw, aargang){
   # SVOMMING
   file[, SVOMMING := data.table::fcase(SVOMMING %in% c("Ja"), "ja", default = "nei")]
   # TRENING
-  file[, TRENING := data.table::fcase(TRENING %in% c("Sjeldnere enn 1 gang i uka"), "ja", default = "nei")]
+  file[, TRENING := data.table::fcase(TRENING %in% c("Sjeldnere enn 1 gang i uka"), "lite", default = "ukentlig")]
 
   # SLUTTFILTER
   dims <- c("GEO", "AAR", "KJONN", "ALDER")
@@ -114,7 +114,7 @@ aggreger_forsvaret_eldre <- function(){
     # SVOMMING
     data[[i]][!is.na(SVOMMING), SVOMMING := data.table::fcase(SVOMMING %in% c("Ja", "Kan svømme 200m"), "ja", default = "nei")]
     # TRENING
-    data[[i]][!is.na(TRENING), TRENING := data.table::fcase(TRENING %in% c("Sjeldnere enn 1 gang i uka"), "ja", default = "nei")]
+    data[[i]][!is.na(TRENING), TRENING := data.table::fcase(TRENING %in% c("Sjeldnere enn 1 gang i uka"), "lite", default = "ukentlig")]
 
     # SLUTTFILTER
     dims <- c("GEO", "AAR", "KJONN", "ALDER")
