@@ -1,7 +1,7 @@
 ---
 title: "khfunctions brukerfil"
 author: "Vegard"
-date: "2026-06-10"
+date: "2026-09-03"
 output: html_document
 ---
 
@@ -12,11 +12,11 @@ library(khfunctions)
 ```
 
 # Endre år
-- Dette styrer hvilken årgang friskvikfiler blir produsert fra. 
-- Gjeldende årgang er 2026
+- Dette styrer `BARE` hvilken årgang friskvikfiler blir produsert fra, andre outputfiler går til DATERT osv. 
+- Gjeldende årgang er 2027
 - Hvis du trenger å endre årgang, kan du bruke koden under
 ```{r}
-# options("khfunctions.year" = 2025)
+# options("khfunctions.year" = 2026)
 ```
 
 # Filgruppe
