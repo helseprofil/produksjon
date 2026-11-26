@@ -63,11 +63,11 @@ update_packages <- function(cran = TRUE, internal = TRUE){
 #' If the user choose to update, instructions regarding what to update is printed.
 #' If the user continues, or if there's no updates available, the welcome message is printed.
 look_for_new_versions <- function(){
-  message("Ser etter nye versjoner av norgeo, orgdata, khfunctions og qualcontrol...\n")
+  message("Ser etter nye versjoner av khtools, norgeo, orgdata, khfunctions og qualcontrol...\n")
   installedpackages <- names(utils::installed.packages()[, "Package"])
   outmessage <- character()
 
-  for(package in c("norgeo", "orgdata", "khfunctions", "qualcontrol")){
+  for(package in c("khtools", "norgeo", "orgdata", "khfunctions", "qualcontrol")){
     branch <- ifelse(package %in% c("norgeo", "khfunctions"), "master", "main")
     is_installed <- package %in% installedpackages
     if(is_installed){

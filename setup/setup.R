@@ -18,6 +18,7 @@ if (!exists("safe_source", mode = "function")) {
 }
 
 safe_source("https://raw.githubusercontent.com/helseprofil/produksjon/main/setup/internal_functions.R")
+safe_source("https://raw.githubusercontent.com/helseprofil/produksjon/main/khfunctions/kh_helpers.R")
 options(warn = 1)
 options(scipen = 999)
 

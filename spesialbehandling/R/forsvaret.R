@@ -1,10 +1,10 @@
 # Koder for å lage filene:
-# aggreger_forsvaret_gk(path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/PRE_RAADATA/ORG_RAADATA/forsvaret_2021_grunnkrets.csv", aar = 2021)
-# aggreger_forsvaret_gk(path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/PRE_RAADATA/ORG_RAADATA/forsvaret_2022_grunnkrets.csv", aar = 2022)
-# aggreger_forsvaret_gk(path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/PRE_RAADATA/ORG_RAADATA/2026-03-12 leveranse FHI for 2006 kull_2023.xlsx", aar = 2023)
-# aggreger_forsvaret_gk(path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/PRE_RAADATA/ORG_RAADATA/forsvaret_2024_grunnkrets.csv", aar = 2024)
-# aggreger_forsvaret_gk(path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/PRE_RAADATA/ORG_RAADATA/FHI leveranse 2026_2025.xlsx", aar = 2025)
-# aggreger_forsvaret_eldre()
+aggreger_forsvaret_gk(path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/PRE_RAADATA/ORG_RAADATA/forsvaret_2021_grunnkrets.csv", aar = 2021)
+aggreger_forsvaret_gk(path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/PRE_RAADATA/ORG_RAADATA/forsvaret_2022_grunnkrets.csv", aar = 2022)
+aggreger_forsvaret_gk(path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/PRE_RAADATA/ORG_RAADATA/2026-03-12 leveranse FHI for 2006 kull_2023.xlsx", aar = 2023)
+aggreger_forsvaret_gk(path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/PRE_RAADATA/ORG_RAADATA/forsvaret_2024_grunnkrets.csv", aar = 2024)
+aggreger_forsvaret_gk(path_raw = "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/PRE_RAADATA/ORG_RAADATA/FHI leveranse 2026_2025.xlsx", aar = 2025)
+aggreger_forsvaret_eldre()
 
 # Til utvikling, path til råfiler
 # 2021 path_raw <- "O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/PRE_RAADATA/ORG_RAADATA/forsvaret_2021_grunnkrets.csv"
@@ -79,6 +79,8 @@ aggreger_forsvaret_eldre <- function(){
   data[["7"]] <- data.table::setDT(readxl::read_xlsx("O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/ORG/2021/EE2019.xlsx")) # 2812 (overvekt, trening, svømming)
   data[["8"]] <- data.table::setDT(readxl::read_xlsx("O:/Prosjekt/FHP/PRODUKSJON/ORGDATA/FORSVARET/ORG/2022/EE2020.xlsx")) # 3386 (overvekt, trening, svømming)
 
+  data[["1"]][, let(Svarår = NULL, AAR = "2014")]
+  data[["6"]] <- data[["6"]][TESK_KODE != "EE2017"]
   data[["7"]][, AAR := "2019"]
   data[["8"]][, AAR := "2020"]
   for(d in 1:5){
